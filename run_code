@@ -1,0 +1,5 @@
+#!/bin/bash
+source /home/dc_group07/miniconda3/etc/profile.d/conda.sh
+conda activate dc
+python task.py
+conda deactivate
