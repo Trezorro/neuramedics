@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Implements the Keras Sequential model."""
+"""Implements the Keras Sequential model. """
 
 import itertools
 import multiprocessing.pool
