@@ -41,7 +41,7 @@ from tensorflow.contrib.session_bundle import exporter
 import os
 
 INIT_CWD = os.getcwd()
-DATA_PATH = r'../TUE/20184102/datasets/'
+DATA_PATH = INIT_CWD + '/'
 
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
@@ -72,7 +72,7 @@ def compile_model(model):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataSmall.npz")
+    data = np.load(DATA_PATH + "trainImages.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -84,7 +84,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataSmall.npz")
+    data = np.load(DATA_PATH + "testImages.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = data["Y_test"]

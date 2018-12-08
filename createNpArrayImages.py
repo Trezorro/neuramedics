@@ -22,8 +22,8 @@ def completeWithAugmentedData(X_tr,Y_tr,limit):
   #print len(X_tr),len(Y_tr)
   return [X_tr,Y_tr]
 
-def read_data_small(labels_dim):
-  input_dir="original_data/trainData"
+def read_train_data(labels_dim):
+  input_dir="/mnt/server-home/TUE/20184102/datasets/test/"
   labels=pd.read_csv("data/trainData.csv")
 
   X_train0 = []
@@ -38,7 +38,7 @@ def read_data_small(labels_dim):
   Y_train3 = []
   Y_train4 = []
 
-  limit=5000
+  limit=90000
 
   for idx,filename in enumerate(labels["image"]):
     img = load_img(input_dir+"/"+str(labels["level"][idx])+"/"+ filename+".tiff") # this is a PIL image
@@ -79,7 +79,7 @@ def read_data_small(labels_dim):
   print ("TrainData size", X_train.shape, Y_train.shape)
   np.savez_compressed("data/trainDataMedium.npz",X_train=X_train,Y_train=Y_train)
 
-def read_data_small_test(labels_dim):
+def read_test_data(labels_dim):
   input_dir="original_data/testData"
   labels=pd.read_csv("data/testData.csv")
 
@@ -95,7 +95,7 @@ def read_data_small_test(labels_dim):
   Y_test3 = []
   Y_test4 = []
 
-  limit=500
+  limit=90000
 
   for idx,filename in enumerate(labels["image"]):
     img = load_img(input_dir+"/"+str(labels["level"][idx])+"/"+ filename+".tiff") # this is a PIL image
@@ -136,7 +136,7 @@ def read_data_small_test(labels_dim):
   print ("TrainData size", X_test.shape, Y_test.shape)
   np.savez_compressed("data/testDataSmall.npz",X_test=X_test,Y_test=Y_test)
 
-#read_data_small(5)
+read_train_data(5)
 
 #read_data_small_test(5)
 

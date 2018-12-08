@@ -26,7 +26,7 @@ from keras.models import load_model
 import model
 from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
-
+import imgToNumpyArrays
 
 CLASS_SIZE = 5
 
@@ -134,6 +134,10 @@ def dispatch(train_files,
 
 
 if __name__ == "__main__":
+    
+    imgToNumpyArrays.save_train_data('/mnt/server-home/TUE/20184102/datasets/train/')
+    imgToNumpyArrays.save_test_data('/mnt/server-home/TUE/20184102/datasets/test/')
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-files',
                         required=False,
@@ -204,4 +208,5 @@ if __name__ == "__main__":
                         help='Checkpoint per n training epochs')
     parse_args, unknown = parser.parse_known_args()
 
+    
     dispatch(**parse_args.__dict__)
