@@ -5,7 +5,7 @@ import time
 import pandas as pd
 
 dirin = '/mnt/server-home/TUE/20184102/datasets/train/'
-dirout = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images'
+dirout = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images/'
 labels = pd.read_csv('/mnt/server-home/TUE/20184102/datasets/trainLabels.csv')
 
 def rescale(img, v):
@@ -67,7 +67,7 @@ def preprocess_sick(dirin, dirout):
     start = time.time()
     i = 0
     step = 0
-    x = len(os.listdir(sick_paths))
+    x = len(sick_paths)
 
     rotations = [90,120,180,270]
 
@@ -93,3 +93,31 @@ def preprocess_sick(dirin, dirout):
     print('All sick files succesfully saved in ' + dirout)
 
 preprocess_sick(dirin, dirout)
+
+def preprocess_healthy(dirin, dirout):
+
+    print('Starting preprocessing of healthy people')
+    start = time.time()
+    i = 0
+    step = 0
+    x = len(healthy_paths)
+
+    for file in healthy_paths:
+        try:
+            img_org = cv.imread(dirin + "/" +file + '.jpeg')
+            img_org = resize(img_org, 400,400)
+            img_org = grayBlur(img_org, 300)
+            cv.imwrite(dirout+file.strip(".jpeg") + "_" + "original" + ".jpeg", img_org)
+            img_mirrored = mirror(img_org)
+            cv.imwrite(dirout+file.strip(".jpeg") + "_" + "mirrored" + ".jpeg", img_mirrored)
+            i+=1
+        except:
+            print(file +' gave an exception')
+            pass
+
+        if float(i/x) > float(step/100):
+            print('-- ' + str(step)+'% done, this took '+ str(time.time()-start) +' seconds so far.')
+            step += 1
+    print('All healthy files succesfully saved in ' + dirout)
+
+preprocess_healthy(dirin, dirout)
