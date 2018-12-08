@@ -1,4 +1,4 @@
-# Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+#Copyright 2017 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import keras
 import pandas as pd
 from keras import backend as K
 from keras import layers, models
+from keras.layers import LeakyReLU
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
@@ -48,14 +49,16 @@ def model_fn(labels_dim):
 
     model = models.Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
-                     activation='relu',
                      input_shape=(128, 128, 3)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+	model.add(LeakyReLU(alpha=0.1)) #added this as a replacement for relu activation 
+    model.add(Conv2D(64, (3, 3)))
+	model.add(LeakyReLU(alpha=0.1)) #added this as a replacement for relu activation 
+    model.add(MaxPooling2D(pool_size=(3, 3), strides = 2)) #changed from 2x2 and no stride
     model.add(Dropout(0.25))
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dense(128))
+	model.add(LeakyReLU(alpha=0.1)) #added this as a replacement for relu activation 
+    model.add(Dropout(0.25)) #changed from 0.5
     model.add(Dense(labels_dim, activation='softmax'))
 
     compile_model(model)
