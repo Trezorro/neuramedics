@@ -33,12 +33,22 @@ def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
 
     model = models.Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3),
-                     input_shape=(128, 128, 3))) 
-	model.add(LeakyReLU(alpha=0.1))
-    model.add(Conv2D(64, (3, 3), strides=(2, 2)))
-	model.add(LeakyReLU())
+    model.add(Conv2D(64, kernel_size=(3, 3),
+                     activation='relu',
+                     input_shape=(128, 128, 3)))
+    model.add(Conv2D(64, (7, 7), strides=(2, 2), activation='relu'))
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(Conv2D(64, (3, 3), activation='relu'))
+	model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
