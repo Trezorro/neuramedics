@@ -84,6 +84,7 @@ def dispatch(train_files,
              checkpoint_epochs):
     retinopathy_model = model.model_fn(CLASS_SIZE)
 
+
     try:
         os.makedirs(job_dir)
     except:
