@@ -36,8 +36,7 @@ def model_fn(labels_dim):
     model.add(Conv2D(64, kernel_size=(3, 3),
                      activation='relu',
                      input_shape=(128, 128, 3)))
-    model.add(Conv2D(64, (7, 7), strides=(2, 2), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+	model.add(Conv2D(64, (7, 7), strides=(2, 2), activation='relu'))
 	model.add(Conv2D(64, (3, 3), activation='relu'))
 	model.add(Conv2D(64, (3, 3), activation='relu'))
 	model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
