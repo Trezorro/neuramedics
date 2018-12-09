@@ -24,7 +24,7 @@ import keras
 import pandas as pd
 from keras import backend as K
 from keras import layers, models
-from keras.layers import LeakyReLU
+from keras.layers import LeakyReLU #added to replace relu with LeakyReLU
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
@@ -54,6 +54,12 @@ def model_fn(labels_dim):
     model.add(Conv2D(64, (3, 3)))
 	model.add(LeakyReLU(alpha=0.1)) #added this as a replacement for relu activation 
     model.add(MaxPooling2D(pool_size=(3, 3), strides = 2)) #changed from 2x2 and no stride
+	
+	#repeated the previous layers
+	model.add(Conv2D(64, (3, 3)))
+	model.add(LeakyReLU(alpha=0.1)) 
+    model.add(MaxPooling2D(pool_size=(3, 3), strides = 2)) 
+	
     model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(128))
