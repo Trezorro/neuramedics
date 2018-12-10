@@ -35,9 +35,9 @@ def model_fn(labels_dim):
     model.add(Conv2D(filters=32, kernel_size=(3, 3), strides=(2,2)
                      activation='relu',
                      input_shape=(256, 256, 3)))
-	model.add(MaxPooling2D(pool_size=(3, 3), stride=(2,2)))
+	model.add(model.add(MaxPooling2D(pool_size=(3, 3)))
     model.add(Conv2D(filters=64, kernel_size=(3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(3, 3), stride=(2,2)))
+    model.add(MaxPooling2D(pool_size=(3, 3))
 	model.add(Conv2D(filters=128, kernel_size=(3,3), activation='relu'))
     model.add(Dropout(0.25))
     model.add(Flatten())
