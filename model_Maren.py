@@ -12,6 +12,7 @@ from keras import layers, models
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import LeakyReLU 
+from keras.layers.normalization import BatchNormalization
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils import np_utils
 from keras.backend import relu, sigmoid
@@ -47,14 +48,17 @@ def model_fn(labels_dim):
     model.add(Conv2D(64, (5, 5)))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(Dropout(0.4))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.15))
     model.add(Flatten())
     model.add(Dense(128))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(Dropout(0.4))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.15))
     model.add(Dense(labels_dim, activation='softmax'))
     compile_model(model)
     return model
+	
 	
 
 def compile_model(model):
