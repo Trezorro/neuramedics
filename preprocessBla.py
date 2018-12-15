@@ -11,6 +11,7 @@ import cv2 as cv
 import os
 import time
 import pandas as pd
+import keras
 
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
@@ -283,6 +284,7 @@ labels_augmented = pd.DataFrame.from_dict(valid_imgs, orient = "index").reset_in
 labels_augmented.columns = ['image', 'level']
 
 not_valid_imgs = pd.DataFrame.from_dict(not_valid_imgs, orient = "index").reset_index()
+not_valid_imgs
 not_valid_imgs.columns = ['image', 'myBirthday']
 
 os.getcwd()
@@ -291,21 +293,4 @@ labels_augmented.to_csv("labels_augmented.csv")
 not_valid_imgs.to_csv("not_valid_imgs.csv")
 
 
-
-
-
-
-
-
-
-
-
-one_image = os.listdir(trainImagesPath)[0]
-one_image
-image_path = trainImagesPath + "/" + one_image
-image_path
-img = cv.imread(image_path)
-img = resize(img, 400,400)
-img = grayBlur(img, 300)
-
-cv.imwrite("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/" + one_image, img)
+### Generating bar graphs for class imbalance comparasion

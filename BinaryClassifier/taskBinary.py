@@ -28,7 +28,7 @@ from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
 
 
-CLASS_SIZE = 5
+CLASS_SIZE = 2
 
 # CHUNK_SIZE specifies the number of lines
 # to read in case the file is very large

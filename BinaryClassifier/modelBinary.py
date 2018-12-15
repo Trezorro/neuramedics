@@ -11,7 +11,7 @@ from keras import backend as K
 from keras import layers, models
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
-from keras.layers import LeakyReLU 
+from keras.layers import LeakyReLU
 from keras.layers.normalization import BatchNormalization
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils import np_utils
@@ -58,10 +58,10 @@ def model_fn(labels_dim):
     model.add(Dense(labels_dim, activation='softmax'))
     compile_model(model)
     return model
-	
 
-	
-	
+
+
+
 
 def compile_model(model):
     model.compile(loss=keras.losses.categorical_crossentropy,
@@ -69,6 +69,9 @@ def compile_model(model):
                   metrics=['accuracy'])
     return model
 
+def createBinaryY(one_hot_labels):
+    lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
+    return keras.utils.to_categorical(lst, num_classes=2)
 
 def read_train_data():
     start_time = time.time()
@@ -77,7 +80,7 @@ def read_train_data():
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
-    Y_train = data["Y_train"]
+    Y_train = createBinaryY(data["Y_train"])
     print("Training - Total examples per class", np.sum(Y_train, axis=0))
     return [X_train, Y_train]
 
@@ -88,6 +91,6 @@ def read_test_data():
     data = np.load(DATA_PATH + "testDataSmall.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
-    Y_test = data["Y_test"]
+    Y_test = createBinaryY(data["Y_test"])
     print("Testing - Total examples per class", np.sum(Y_test, axis=0))
     return [X_test, Y_test]
