@@ -63,7 +63,7 @@ def model_fn(labels_dim):
 
 def compile_model(model):
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer='Adam',
+                  optimizer='Adamax',
                   metrics=['accuracy'])
     return model
 
