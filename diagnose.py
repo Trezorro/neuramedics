@@ -9,14 +9,14 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 
 SHOWGRAPH = False
-model = keras.models.load_model('retinopathy4.hdf5')
+dataDir = 'sample/' #include last slash
+model = keras.models.load_model('retinopathy.hdf5')
 
 x =[]
 
-for file in os.listdir("./data/sample"):
-    img = image.load_img('data/sample/'+file, target_size=(128, 128, 3))
+for file in os.listdir("./data/" + dataDir):
+    img = image.load_img('data/' + dataDir + file, target_size=(128, 128, 3))
     plt.imshow(img)
-    plt.show()
     img = image.img_to_array(img)
     x = np.resize(img, (1, 128,128,3))
     prediction = model.predict(x)
@@ -42,4 +42,5 @@ for file in os.listdir("./data/sample"):
                   opacity= 0.8,
                   layer= "above")])
         }, auto_open=True)
-        break
+        # break #uncomment if you want to just test 1 picture
+    plt.show()

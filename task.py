@@ -32,8 +32,8 @@ CLASS_SIZE = 5
 
 # CHUNK_SIZE specifies the number of lines
 # to read in case the file is very large
-FILE_PATH = 'checkpoint.{epoch:02d}.hdf5'
-RETINOPATHY_MODEL = 'retinopathy.hdf5'
+    FILE_PATH = 'checkpoint.{epoch:02d}.hdf5'
+RETINOPATHY_MODEL = 'retinopathy_milan.hdf5'
 
 
 class ContinuousEval(keras.callbacks.Callback):
@@ -92,7 +92,7 @@ def dispatch(train_files,
 
     # Unhappy hack to work around h5py not being able to write to GCS.
     # Force snapshots and saves to local filesystem, then copy them over to GCS.
-    checkpoint_path = FILE_PATH
+        checkpoint_path = FILE_PATH
     checkpoint_path = os.path.join(job_dir, checkpoint_path)
 
     # Model checkpoint callback
@@ -123,16 +123,29 @@ def dispatch(train_files,
         zoom_range=0.1,
         horizontal_flip=True)
 
-    retinopathy_model.fit_generator(
+    history = retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
         steps_per_epoch=100,
-        epochs=50,
+        epochs=1,
         callbacks=callbacks,
         verbose=2,
         validation_data=(evaluation.X_test, evaluation.Y_test))
 
+    # retinopathy_model.fit(X_train, Y_train,batch_size=100,epochs=5,validation_data=None)
+
     retinopathy_model.save(os.path.join(job_dir, RETINOPATHY_MODEL))
 
+    print(dir(history))
+    for key, value in history.__dict__.items():
+        if key.find("__") == -1:
+            try:
+                print(history.value)
+            except AttributeError:
+                pass
+    try:
+        print(history.history.items())
+    except:
+        pass
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
