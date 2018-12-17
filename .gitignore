@@ -1,6 +1,9 @@
+#Milans ignorable folders
 data
 old backup
-#this is just some folder in milans local repo
+help
+*.html
+.ipynb_checkpoints
 
 __pycache__
 *.pyc
