@@ -23,7 +23,7 @@ import numpy as np
 
 import keras
 from keras.models import load_model
-import modelBinary as model
+import modelBinary as
 from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -119,8 +119,8 @@ def dispatch(train_files,
 
     datagen = ImageDataGenerator(
         shear_range=0.1,
-        zoom_range=0.1,
-        horizontal_flip=True)
+        zoom_range=0.1)
+        #horizontal_flip=True)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),

@@ -28,7 +28,7 @@ from tensorflow.contrib.session_bundle import exporter
 import os
 
 INIT_CWD = os.getcwd()
-DATA_PATH = r'../TUE/20184102/datasets/'
+DATA_PATH = "/mnt/server-home/dc_group08/data/npz/"
 
 
 
@@ -76,7 +76,7 @@ def createBinaryY(one_hot_labels):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataSmall.npz")
+    data = np.load(DATA_PATH + "trainData107k400.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -88,7 +88,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataSmall.npz")
+    data = np.load(DATA_PATH + "testData107k400.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = createBinaryY(data["Y_test"])
