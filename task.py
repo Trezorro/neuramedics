@@ -14,7 +14,10 @@
 # ==============================================================================
 
 """This code implements a Feed forward neural network using Keras API."""
-
+# import comet_ml in the top of your file 
+from comet_ml import Experiment 
+# Add the following code anywhere in your machine learning file 
+experiment = Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="general", workspace="blazejmanczak")
 import argparse
 import glob
 import json
@@ -117,10 +120,7 @@ def dispatch(train_files,
 
     [X_train, Y_train] = model.read_train_data()
 
-    datagen = ImageDataGenerator(
-        shear_range=0.1,
-        zoom_range=0.1,
-        horizontal_flip=True)
+    datagen = ImageDataGenerator(rescale=1. / 255, rotation_range=180, shear_range=0.2, zoom_range=0.4, horizontal_flip=True, vertical_flip=True)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
