@@ -26,7 +26,7 @@ import numpy as np
 
 import keras
 from keras.models import load_model
-import model
+import model_Maren as model
 from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
 
