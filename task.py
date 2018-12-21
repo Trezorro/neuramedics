@@ -120,7 +120,7 @@ def dispatch(train_files,
 
     [X_train, Y_train] = model.read_train_data()
 
-    datagen = ImageDataGenerator(rescale=1. / 255, rotation_range=180, shear_range=0.2, zoom_range=0.4, horizontal_flip=True, vertical_flip=True)
+    datagen = ImageDataGenerator(rescale=1 / 255, rotation_range=180, shear_range=0.2, zoom_range=0.4, horizontal_flip=True, vertical_flip=True)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
