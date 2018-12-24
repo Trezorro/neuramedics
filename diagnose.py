@@ -8,8 +8,8 @@ import plotly.graph_objs as go
 
 import matplotlib.pyplot as plt
 
-SHOWGRAPH = False
-dataDir = 'sample/' #include last slash
+SHOWGRAPH = True
+dataDir = 'testimgs/' #include last slash
 model = keras.models.load_model('retinopathy.hdf5')
 
 x =[]
@@ -25,7 +25,7 @@ for file in os.listdir("./data/" + dataDir):
 
 
     if SHOWGRAPH:
-        encoded_image = base64.b64encode(open("./data/sample/"+file,'rb').read())
+        encoded_image = base64.b64encode(open("./data/"+dataDir+file,'rb').read())
 
         plotly.offline.plot({
         "data": [go.Bar(x=["Healthy","Stage 1","Stage 2","Stage 3","Stage 4"], y=prediction[0])],
