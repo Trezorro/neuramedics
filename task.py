@@ -28,7 +28,7 @@ import numpy as np
 
 import keras
 from keras.models import load_model
-import model
+import model as modelBinary
 from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -133,7 +133,8 @@ def dispatch(train_files,
         write_graph=True,
         embeddings_freq=0)
 
-    callbacks = [checkpoint, evaluation, tblog]
+    #callbacks = [checkpoint, evaluation, tblog]
+    callbacks = [evaluation, tblog]
 
     [X_train, Y_train] = model.read_train_data()
 

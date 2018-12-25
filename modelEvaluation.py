@@ -70,6 +70,8 @@ def createBinaryY(one_hot_labels):
     lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
     return keras.utils.to_categorical(lst, num_classes=2)
 
+def createTrinaryY(one_hot_labels):
+    lst = [1]
 
 def get_binary_probabilities(preds):
     probabs = []
