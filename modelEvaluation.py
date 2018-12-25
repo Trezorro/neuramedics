@@ -8,6 +8,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import random
 import keras
 import pandas as pd
 from keras import backend as K
@@ -20,7 +21,8 @@ plt.rcParams['figure.figsize'] = 12,9
 
 import cv2 as cv
 
-
+os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
+labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
 os.getcwd()
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
 
@@ -37,24 +39,28 @@ X_test = data_test["X_test"].astype(np.float32)
 Y_test = data_test["Y_test"].astype(np.float32)
 
 
-os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
-labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
-counter_class0 = 0
-counter_class1 = 0
-for idx, filename in enumerate(labels['image'][85000:]):
-    #img = cv.imread(dir+filename+'.jpeg')
-    #img = img_to_array(img)
-    if labels['level'][idx]==0:
-        counter_class0 +=1
-    else:
-        counter_class1 += 1
-    #
-counter_class0
-counter_class1
 
+def checkClassImabalanceBinary(labels):
+    counter_class0 = 0
+    counter_class1 = 0
+    for idx, filename in enumerate(labels['image'][85000:]):
+        #img = cv.imread(dir+filename+'.jpeg')
+        #img = img_to_array(img)
+        if labels['level'][idx]==0:
+            counter_class0 +=1
+        else:
+            counter_class1 += 1
+    print("Count of healthy: ", counter_class0)
+    print("Count of sick: ", counter_class1)
+
+checkClassImabalanceBinary(labels)
+
+
+
+### Model evaluation part
 
 model = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
-model.evaluate(X_test, Y_test)
+#model.evaluate(X_test, Y_test)
 
 
 predictions = model.predict(X_test)
@@ -125,4 +131,43 @@ def plot_roc(predictions, labels): # more: https://scikit-plot.readthedocs.io/en
 
 
 ax = plot_roc(predictions, true_binary_Y)
-=
+
+
+### Testing out sampling functions
+
+x_train_small = X_train[:10]
+y_train_small = Y_train[:10]
+
+zipped = list(zip(x_train_small, y_train_small))
+random.shuffle(zipped)
+
+
+x_train_small, y_train_small = zip(*zipped)
+np.array(x_train_small).shape
+
+
+
+def take_random_sample(size, X, Y,seed):
+    zipped = list(zip(X,Y))
+    random.Random(seed).shuffle(zipped)
+    zipped_shuffeled_sampled = zipped[:size]
+    sample_x, sample_y = zip(*zipped_shuffeled_sampled)
+    return np.array(sample_x), np.array(sample_y)
+
+a,b = take_random_sample(4,x_train_small,y_train_small,7)
+a = ['a', 'b', 'c', 'd','e','f','g']
+b = [1, 2, 3,4,5,6,7]
+
+a,b = take_random_sample(4,a,b,11)
+a
+b
+
+### Checking wheteher npz's have similiar properties
+
+jaap128 = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/testDataResized128.npz")
+
+jX = jaap128['X_test'].astype('float32')
+jY = jaap128['Y_test'].astype('float32')
+
+plt.imshow(jX[99])
+plt.show()
