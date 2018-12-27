@@ -34,7 +34,7 @@ from keras.preprocessing.image import ImageDataGenerator
 
 
 # Add the following code anywhere in your machine learning file experiment =
-Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="general", workspace="blazejmanczak")
+Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="data-challange-1", workspace="blazejmanczak")
 
 CLASS_SIZE = 2
 

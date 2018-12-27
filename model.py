@@ -98,7 +98,7 @@ def read_train_data():
     print(data)
     X_train = data["X_train"] # TODO
     Y_train = createBinaryY(data["Y_train"])
-    X_train, Y_train = take_random_sample(8000, X_train, Y_train, 1998)
+    X_train, Y_train = take_random_sample(1000, X_train, Y_train, 1998) #8000
     print("Training - Total examples per class", np.sum(Y_train, axis=0))
     return [X_train, Y_train]
 
@@ -110,6 +110,6 @@ def read_test_data():
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = createBinaryY(data["Y_test"])
-    X_test, Y_test = take_random_sample(3000, X_test, Y_test, 1998)
+    X_test, Y_test = take_random_sample(100, X_test, Y_test, 1998) #3000
     print("Testing - Total examples per class", np.sum(Y_test, axis=0))
     return [X_test, Y_test]
