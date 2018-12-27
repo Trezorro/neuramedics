@@ -21,11 +21,14 @@ import threading
 from functools import partial
 
 import keras
+import random
 import pandas as pd
 from keras import backend as K
 from keras import layers, models
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import LeakyReLU
+from keras.layers.normalization import BatchNormalization
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils import np_utils
 from keras.backend import relu, sigmoid
@@ -39,6 +42,10 @@ from tensorflow.python.saved_model import tag_constants, signature_constants
 from tensorflow.python.saved_model.signature_def_utils_impl import build_signature_def, predict_signature_def
 from tensorflow.contrib.session_bundle import exporter
 import os
+
+INIT_CWD = os.getcwd()
+DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
+
 
 INIT_CWD = os.getcwd()
 DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
