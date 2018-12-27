@@ -72,9 +72,8 @@ def createBinaryY(one_hot_labels):
 
 
 def createTrinaryY(one_hot_labels):
-    lst = [0 if i[1] == 0 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
+    lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
     return keras.utils.to_categorical(lst, num_classes=3)
-
 
 def get_binary_probabilities(preds):
     probabs = []
@@ -140,18 +139,6 @@ ax = plot_roc(predictions, true_binary_Y)
 
 ### Testing out sampling functions
 
-x_train_small = X_train[:10]
-y_train_small = Y_train[:10]
-
-zipped = list(zip(x_train_small, y_train_small))
-random.shuffle(zipped)
-
-
-x_train_small, y_train_small = zip(*zipped)
-np.array(x_train_small).shape
-
-
-
 def take_random_sample(size, X, Y,seed):
     zipped = list(zip(X,Y))
     random.Random(seed).shuffle(zipped)
@@ -167,11 +154,24 @@ a,b = take_random_sample(4,a,b,11)
 a
 b
 
-### Checking wheteher npz's have similiar properties
+### Writing function to take number of samples of each class
 
-jaap128 = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/testDataResized128.npz")
+def take_balanced(CLASS_SIZE, X, Y, sample_num):
+    sample_indices = {}
+    counter = 0
+    for i in range(0, CLASS_SIZE): # initialize a dictionary with list of indices as values
+        sample_indices["class{0}".format(i)] = []
+    while (not all(len(value) == sample_num for value in sample_indices.values())) and (counter != (len(Y))):
+        class_to_put = int(np.where([Y[counter] == 1])[1]) #establishes the class of the instance
+        if len(sample_indices['class{0}'.format(class_to_put)]) < sample_num:
+            sample_indices['class{0}'.format(class_to_put)].append(counter)
+        counter +=1
+    indices = [item for sublist in sample_indices.values() for item in sublist]
+    X_sub = np.array([X[k] for k in indices])
+    Y_sub = np.array([Y[z] for z in indices])
+    return X_sub, Y_sub
 
-jX = jaap128['X_test'].astype('float32')
-jY = jaap128['Y_test'].astype('float32')
-
-jX.shape
+true_binary_Y
+a, b = take_balanced(5, X_test, np.array(true_binary_Y), 5)
+a.shape
+b
