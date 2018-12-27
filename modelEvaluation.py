@@ -70,8 +70,11 @@ def createBinaryY(one_hot_labels):
     lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
     return keras.utils.to_categorical(lst, num_classes=2)
 
+
 def createTrinaryY(one_hot_labels):
-    lst = [1]
+    lst = [0 if i[1] == 0 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
+    return keras.utils.to_categorical(lst, num_classes=3)
+
 
 def get_binary_probabilities(preds):
     probabs = []
@@ -171,5 +174,4 @@ jaap128 = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/t
 jX = jaap128['X_test'].astype('float32')
 jY = jaap128['Y_test'].astype('float32')
 
-plt.imshow(jX[99])
-plt.show()
+jX.shape
