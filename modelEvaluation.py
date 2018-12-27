@@ -156,6 +156,10 @@ b
 
 ### Writing function to take number of samples of each class
 
+def createTernaryY(one_hot_labels):
+    lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
+    return keras.utils.to_categorical(lst, num_classes=3)
+
 def take_balanced(CLASS_SIZE, X, Y, sample_num):
     sample_indices = {}
     counter = 0
@@ -170,8 +174,8 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
     X_sub = np.array([X[k] for k in indices])
     Y_sub = np.array([Y[z] for z in indices])
     return X_sub, Y_sub
-
-true_binary_Y
-a, b = take_balanced(5, X_test, np.array(true_binary_Y), 5)
+ternary_Y = createTernaryY(Y_test)
+ternary_Y[:3]
+a, b = take_balanced(3, X_test, ternary_Y , 6)
 a.shape
 b
