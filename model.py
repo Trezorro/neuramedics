@@ -40,6 +40,8 @@ from tensorflow.python.saved_model.signature_def_utils_impl import build_signatu
 from tensorflow.contrib.session_bundle import exporter
 import os
 
+INIT_CWD = os.getcwd()
+DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
 
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
