@@ -50,8 +50,6 @@ DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
 INIT_CWD = os.getcwd()
 DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
 
-print("Labels_dim is: ", labels_dim)
-
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
 
