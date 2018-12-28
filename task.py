@@ -14,7 +14,7 @@
 # ==============================================================================
 
 """This code implements a Feed forward neural network using Keras API.
-Ternary model. steps_per_epoch = 100
+Ternary model. steps_per_epoch = 100. 75 epochs.
 """
 
 from comet_ml import Experiment
@@ -144,8 +144,8 @@ def dispatch(train_files,
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
-        steps_per_epoch=100,
-        epochs=50,
+        steps_per_epoch=400,
+        epochs=75,
         callbacks=callbacks,
         verbose=2,
         validation_data=(evaluation.X_test, evaluation.Y_test))

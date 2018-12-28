@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""This code implements a Feed forward neural network using Keras API.
+"""This code implements a Feed forward neural network using Keras API. 75 epochs.
 Ternary model.
 """
 
@@ -145,7 +145,7 @@ def dispatch(train_files,
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
         steps_per_epoch=200,
-        epochs=50,
+        epochs=75,
         callbacks=callbacks,
         verbose=2,
         validation_data=(evaluation.X_test, evaluation.Y_test))
