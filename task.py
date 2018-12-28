@@ -133,8 +133,8 @@ def dispatch(train_files,
         write_graph=True,
         embeddings_freq=0)
 
-    #callbacks = [checkpoint, evaluation, tblog]
-    callbacks = [evaluation, tblog]
+    callbacks = [checkpoint, evaluation, tblog]
+    #callbacks = [evaluation, tblog]
 
     [X_train, Y_train] = model.read_train_data()
 
@@ -151,7 +151,7 @@ def dispatch(train_files,
         verbose=2,
         validation_data=(evaluation.X_test, evaluation.Y_test))
 
-    #retinopathy_model.save(os.path.join(job_dir, RETINOPATHY_MODEL))
+    retinopathy_model.save(os.path.join(job_dir, RETINOPATHY_MODEL)) # previosuly commented out 
 
     save_model(retinopathy_model, evaluation.acc, 'Jaap' )
 
