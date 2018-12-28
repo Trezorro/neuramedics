@@ -118,7 +118,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "/teData256.npz")
+    data = np.load(DATA_PATH + "/testData256.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = createTrinaryY(data["Y_test"])
