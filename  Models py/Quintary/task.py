@@ -14,7 +14,7 @@
 # ==============================================================================
 
 """This code implements a Feed forward neural network using Keras API.
-Ternary model. steps_per_epoch = 100
+Binary model. Steps per epoch = 200.
 """
 
 from comet_ml import Experiment
@@ -34,7 +34,7 @@ from keras.preprocessing.image import ImageDataGenerator
 # Add the following code anywhere in your machine learning file experiment =
 Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="data-challange-1", workspace="blazejmanczak")
 
-CLASS_SIZE = 3
+CLASS_SIZE = 5
 
 # CHUNK_SIZE specifies the number of lines
 # to read in case the file is very large
@@ -143,7 +143,7 @@ def dispatch(train_files,
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
-        steps_per_epoch=100,
+        steps_per_epoch=200,
         epochs=50,
         callbacks=callbacks,
         verbose=2,

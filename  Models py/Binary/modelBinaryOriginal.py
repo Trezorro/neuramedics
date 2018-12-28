@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Implements the Keras Sequential model. Ternary"""
+"""Implements the Keras Sequential model."""
 
 import itertools
 import multiprocessing.pool
@@ -49,8 +49,6 @@ DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
 
 INIT_CWD = os.getcwd()
 DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
-
-print("Labels_dim is: ", labels_dim)
 
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
@@ -114,9 +112,8 @@ def read_train_data():
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
-    Y_train = createTrinaryY(data["Y_train"])
-    X_train, Y_train = take_random_sample(X_train.shape[0], X_train, Y_train, 1998) # X_train.shape[0] takes all the photos and shuffles
-    X_train, Y_train = take_balanced(3, X_train, Y_train, 2500)
+    Y_train = createBinaryY(data["Y_train"])
+    X_train, Y_train = take_random_sample(80, X_train, Y_train, 1998) #8000
     print("Training - Total examples per class", np.sum(Y_train, axis=0))
     return [X_train, Y_train]
 
@@ -127,8 +124,7 @@ def read_test_data():
     data = np.load(DATA_PATH + "/testDataResized128.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
-    Y_test = createTrinaryY(data["Y_test"])
-    X_test, Y_test = take_random_sample(X_test.shape[0], X_test, Y_test, 1998) # X_test.shape[0] takes all the photos and shuffles
-    X_test, Y_test = take_balanced(3, X_test, Y_test, 500)
+    Y_test = createBinaryY(data["Y_test"])
+    X_test, Y_test = take_random_sample(10, X_test, Y_test, 1998) #3000
     print("Testing - Total examples per class", np.sum(Y_test, axis=0))
     return [X_test, Y_test]
