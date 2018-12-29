@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Implements the Keras Sequential model. Ternary. Original architecture. Preprocessed 256"""
+"""Implements the Keras Sequential model. Ternary. Original architecture. TestDataSmall"""
 
 import itertools
 import multiprocessing.pool
@@ -44,7 +44,7 @@ from tensorflow.contrib.session_bundle import exporter
 import os
 
 INIT_CWD = os.getcwd()
-DATA_PATH = "/mnt/server-home/dc_group08/data/npz"
+DATA_PATH = r'../TUE/20184102/datasets/'
 
 
 def model_fn(labels_dim):
@@ -53,7 +53,7 @@ def model_fn(labels_dim):
     model = models.Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
                      activation='relu',
-                     input_shape=(256, 256, 3)))
+                     input_shape=(128, 128, 3)))
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
@@ -104,13 +104,13 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "/trainData256.npz")
+    data = np.load(DATA_PATH + "trainDataSmall.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
     Y_train = createTrinaryY(data["Y_train"])
-    X_train, Y_train = take_random_sample(X_train.shape[0], X_train, Y_train, 1998) # X_train.shape[0] takes all the photos and shuffles
-    X_train, Y_train = take_balanced(3, X_train, Y_train, 7500)
+    #X_train, Y_train = take_random_sample(X_train.shape[0], X_train, Y_train, 1998) # X_train.shape[0] takes all the photos and shuffles
+    #X_train, Y_train = take_balanced(3, X_train, Y_train, 7500)
     print("Training - Total examples per class", np.sum(Y_train, axis=0))
     return [X_train, Y_train]
 
@@ -118,11 +118,11 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "/testData256.npz")
+    data = np.load(DATA_PATH + "testDataSmall.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = createTrinaryY(data["Y_test"])
-    X_test, Y_test = take_random_sample(X_test.shape[0], X_test, Y_test, 1998) # X_test.shape[0] takes all the photos and shuffles
-    X_test, Y_test = take_balanced(3, X_test, Y_test, 1400)
+    #X_test, Y_test = take_random_sample(X_test.shape[0], X_test, Y_test, 1998) # X_test.shape[0] takes all the photos and shuffles
+    #X_test, Y_test = take_balanced(3, X_test, Y_test, 1400)
     print("Testing - Total examples per class", np.sum(Y_test, axis=0))
     return [X_test, Y_test]
