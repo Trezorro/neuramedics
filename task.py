@@ -13,11 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-"""This code implements a Feed forward neural network using Keras API."""
-# import comet_ml in the top of your file 
-from comet_ml import Experiment 
-# Add the following code anywhere in your machine learning file 
-experiment = Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="general", workspace="blazejmanczak")
+"""This code implements a Feed forward neural network using Keras API.
+Ternary model. steps_per_epoch = 200. 75 epochs.
+"""
+
+from comet_ml import Experiment
 import argparse
 import glob
 import json
@@ -26,12 +26,15 @@ import numpy as np
 
 import keras
 from keras.models import load_model
-import model_Maren as model
+import model
 from tensorflow.python.lib.io import file_io
 from keras.preprocessing.image import ImageDataGenerator
 
 
-CLASS_SIZE = 5
+# Add the following code anywhere in your machine learning file experiment =
+Experiment(api_key="Qs9hrAPUWIusY5UKNebGp1MAN", project_name="data-challange-1", workspace="blazejmanczak")
+
+CLASS_SIZE = 3
 
 # CHUNK_SIZE specifies the number of lines
 # to read in case the file is very large
@@ -50,6 +53,8 @@ class ContinuousEval(keras.callbacks.Callback):
         self.eval_frequency = eval_frequency
         self.job_dir = job_dir
         [self.X_test, self.Y_test] = model.read_test_data()
+        self.loss = 0
+        self.acc = 0
 
     def on_epoch_begin(self, epoch, logs={}):
         if epoch > 0 and epoch % self.eval_frequency == 0:
@@ -64,11 +69,21 @@ class ContinuousEval(keras.callbacks.Callback):
                 retinopathy_model = model.compile_model(retinopathy_model)
                 loss, acc = retinopathy_model.evaluate(
                     self.X_test, self.Y_test)
+                self.loss, self.acc = retinopathy_model.evaluate(
+                    self.X_test, self.Y_test)
                 print('\nEvaluation epoch[{}] metrics[{:.2f}, {:.2f}] {}'.format(
                     epoch, loss, acc, retinopathy_model.metrics_names))
             else:
                 print('\nEvaluation epoch[{}] (no checkpoints found)'.format(epoch))
 
+def save_model(model, acc, name):
+
+    if acc >= .01:
+        #print('Saving model')
+        model.save('/mnt/server-home/dc_group08/models/' + name + '_accuracy_' + str(acc) + '.hdf5')
+    else:
+        #print('The model was not saved, the accuracy is:' + str(acc))
+        pass
 
 def dispatch(train_files,
              eval_files,
@@ -117,23 +132,32 @@ def dispatch(train_files,
         embeddings_freq=0)
 
     callbacks = [checkpoint, evaluation, tblog]
+    #callbacks = [evaluation, tblog]
 
     [X_train, Y_train] = model.read_train_data()
 
-    datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, rotation_range=15, zoom_range=0.1)
+    datagen = ImageDataGenerator(
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        rotation_range=15,
+        zoom_range=0.1)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
         steps_per_epoch=100,
-        epochs=50,
+        epochs=75,
         callbacks=callbacks,
         verbose=2,
         validation_data=(evaluation.X_test, evaluation.Y_test))
 
-    retinopathy_model.save(os.path.join(job_dir, RETINOPATHY_MODEL))
+    retinopathy_model.save(os.path.join(job_dir, RETINOPATHY_MODEL)) # previosuly commented out
 
+    save_model(retinopathy_model, evaluation.acc, 'Jaap' )
 
 if __name__ == "__main__":
+
+
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-files',
                         required=False,
@@ -203,5 +227,6 @@ if __name__ == "__main__":
                         default=10,
                         help='Checkpoint per n training epochs')
     parse_args, unknown = parser.parse_known_args()
+
 
     dispatch(**parse_args.__dict__)
