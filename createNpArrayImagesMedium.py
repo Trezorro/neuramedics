@@ -53,15 +53,21 @@ def read_data_small(labels_dim):
 
         if ( (labels["level"][idx]==0) and (len(X_train0)<limit) ):
             X_train0.append(x)
-            Y_train0.append(labels["level"][idx])
+            #Y_train0.append(labels["level"][idx])
+            Y_train0.append(0)
+
 
         if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_train1)<limit)):
             X_train1.append(x)
-            Y_train1.append(labels["level"][idx])
+            #Y_train1.append(labels["level"][idx])
+            Y_train1.append(1)
+
 
         if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_train2)<limit)):
             X_train2.append(x)
-            Y_train2.append(labels["level"][idx])
+            #Y_train2.append(labels["level"][idx])
+            Y_train2.append(2)
+
 
         """
         if ((labels["level"][idx]==3)and(len(X_train3)<limit)):
@@ -112,15 +118,19 @@ def read_data_small_test(labels_dim):
 
         if ((labels["level"][idx]==0)and(len(X_test0)<limit)):
           X_test0.append(x)
-          Y_test0.append(labels["level"][idx])
+          #Y_test0.append(labels["level"][idx])
+          Y_test0.append(0)
 
         if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_test1)<limit)):
           X_test1.append(x)
-          Y_test1.append(labels["level"][idx])
+          #Y_test1.append(labels["level"][idx])
+          Y_test1.append(1)
+
 
         if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_test2)<limit)):
           X_test2.append(x)
-          Y_test2.append(labels["level"][idx])
+          #Y_test2.append(labels["level"][idx])
+          Y_test2.append(2)
         """
         if ((labels["level"][idx]==3)and(len(X_test3)<limit)):
           X_test3.append(x)
