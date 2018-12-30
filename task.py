@@ -140,7 +140,8 @@ def dispatch(train_files,
         width_shift_range=0.1,
         height_shift_range=0.1,
         rotation_range=15,
-        zoom_range=0.1)
+        zoom_range=0.1,
+        horizontal_flip=True)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
