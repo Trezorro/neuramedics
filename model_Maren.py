@@ -68,11 +68,13 @@ def model_fn(labels_dim):
     model.add(BatchNormalization())
     model.add(Dropout(0.4))
     model.add(Flatten())
-    model.add(Dense(128))
+    model.add(MaxoutDense(128))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(BatchNormalization())
     model.add(Dropout(0.4))
     model.add(Dense(labels_dim, activation='softmax'))
+    model.add(MaxoutDense(labels_dim))
+    model.add(Softmax())
     compile_model(model)
 
     return model
