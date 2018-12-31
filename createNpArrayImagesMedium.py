@@ -28,8 +28,8 @@ def completeWithAugmentedData(X_tr,Y_tr,limit):
 
 def read_data_small(labels_dim):
     input_dir="/mnt/server-home/TUE/20184102/datasets/train"
-    labels=pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
-
+    labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
+    labels = labels.sample(frac=1, random_state=1998)[:26000]
     X_train0 = []
     X_train1 = []
     X_train2 = []
@@ -42,7 +42,7 @@ def read_data_small(labels_dim):
       #Y_train3 = []
       #Y_train4 = []
 
-    limit=9999
+    limit=3500
 
     for idx,filename in enumerate(labels["image"]):
         #print("Idx:", idx, "filename", filename)
@@ -78,7 +78,7 @@ def read_data_small(labels_dim):
           X_train4.append(x)
           Y_train4.append(labels["level"][idx])
         """
-    [X_train0,Y_train0]=completeWithAugmentedData(X_train0,Y_train0,limit)
+    [X_train0,Y_train0]= completeWithAugmentedData(X_train0,Y_train0,limit)
     [X_train1, Y_train1] = completeWithAugmentedData(X_train1, Y_train1,limit)
     [X_train2, Y_train2] = completeWithAugmentedData(X_train2, Y_train2,limit)
     #[X_train3, Y_train3] = completeWithAugmentedData(X_train3, Y_train3,limit)
@@ -94,8 +94,9 @@ def read_data_small(labels_dim):
     np.savez_compressed("/mnt/server-home/dc_group08/data/npz/trainDataMediumTrenary.npz",X_train=X_train,Y_train=Y_train)
 
 def read_data_small_test(labels_dim):
-    input_dir="/mnt/server-home/TUE/20184102/datasets/test"
-    labels=pd.read_csv("/mnt/server-home/dc_group08/data/retinopathy_solution.csv")
+    input_dir="/mnt/server-home/TUE/20184102/datasets/train"
+    labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
+    labels = labels.sample(frac=1, random_state=1998)[26000:]
 
     X_test0 = []
     X_test1 = []
@@ -109,7 +110,7 @@ def read_data_small_test(labels_dim):
     #Y_test3 = []
     #Y_test4 = []
 
-    limit= 1000
+    limit= 1200
 
     for idx,filename in enumerate(labels["image"]):
         #img = load_img(input_dir+"/"+str(labels["level"][idx])+"/"+ filename+".tiff", target_size = (256, 256)) # this is a PIL image
