@@ -98,7 +98,8 @@ def read_data_small(labels_dim):
 def read_data_small_test(labels_dim):
     input_dir="/mnt/server-home/TUE/20184102/datasets/train"
     labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
-    labels = labels.sample(frac=1, random_state=1998).reset_index()[26000:]
+    labels = labels.sample(frac=1, random_state=1998)[26000:]
+    labels = labels.reset_index()
 
     X_test0 = []
     X_test1 = []
