@@ -159,7 +159,7 @@ def read_data_small_test(labels_dim):
     print ("TrainData size", X_test.shape, Y_test.shape)
     np.savez_compressed("/mnt/server-home/dc_group08/data/npz/testDataMediumTrenary.npz",X_test=X_test,Y_test=Y_test)
 
-read_data_small(3)
+#read_data_small(3)
 read_data_small_test(3)
 
 """
