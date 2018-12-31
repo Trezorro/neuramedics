@@ -145,7 +145,7 @@ def dispatch(train_files,
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
-        steps_per_epoch=100,
+        steps_per_epoch=200,
         epochs=75,
         callbacks=callbacks,
         verbose=2,
