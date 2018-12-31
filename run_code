@@ -2,7 +2,11 @@
 source /home/dc_group08/miniconda3/etc/profile.d/conda.sh
 conda activate dc_env
 
+<<<<<<< HEAD
 python "/home/dc_group08/blazej/task.py" --job-dir '/blazej/jobs'
+=======
+python "/home/dc_group08/blazej/task.py" --job-dir 'jobs'
+>>>>>>> ede2fd28fe0570857a28117b6231db36ef51feec
 
 conda deactivate
 exit 0
