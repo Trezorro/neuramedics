@@ -44,7 +44,7 @@ from tensorflow.contrib.session_bundle import exporter
 import os
 
 INIT_CWD = os.getcwd()
-DATA_PATH = "/mnt/server-home/dc_group08/data/npz/
+DATA_PATH = "/mnt/server-home/dc_group08/data/npz/""
 
 
 def model_fn(labels_dim):
