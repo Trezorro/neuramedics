@@ -3,7 +3,6 @@ import os
 from keras.models import load_model
 import pandas as pd
 import numpy as np
-import os
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -25,8 +24,21 @@ os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
 labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
 os.getcwd()
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
+sum((labels['level'] == 1) | (labels['level'] == 2))
 
+### Looking at medium npz rich 
+import scipy.misc
+input_dir = "/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/seeImages"
+testMedium = np.load("testDataMediumTrenary.npz")
+X_medium = testMedium['X_test'].astype(np.float32)
+X_medium.shape
+def saveImages(input_dir, X):
+    for i in range (0,X.shape[0]):
+        scipy.misc.imsave("outphoto{0}.jpg".format(i),X[i])
 
+#saveImages(input_dir,X_medium)
+plt.imshow(X_medium[800])
+plt.show()
 
 data_train = np.load("trainDataSmall.npz")
 data_test = np.load("testDataSmall.npz")

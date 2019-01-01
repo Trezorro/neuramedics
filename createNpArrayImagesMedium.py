@@ -10,10 +10,10 @@ def completeWithAugmentedData(X_tr,Y_tr,limit):
   toAdd=limit-len(X_tr)
   if (len(X_tr)<limit):
     datagen = ImageDataGenerator(
-      width_shift_range=0.1,
-      height_shift_range=0.1,
-      rotation_range=15,
-      zoom_range=0.1,
+    #  width_shift_range=0.1,
+      #height_shift_range=0.1,
+      #rotation_range=15,
+      zoom_range=0.08,
       horizontal_flip=True)
     gentrain = datagen.flow(np.asarray(X_tr), batch_size=1)
     igen=0
@@ -29,9 +29,11 @@ def completeWithAugmentedData(X_tr,Y_tr,limit):
 def read_data_small(labels_dim):
     input_dir="/mnt/server-home/TUE/20184102/datasets/train"
     labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
-    labels = labels.sample(frac=1, random_state=1998).reset_index()[:26000]
-    print("Shape of labels is:", labels.shape)
-
+    labels = labels.sample(frac=1, random_state=1998).reset_index()[:28000]
+    print("Shape of labels in triaining is:", labels.shape)
+    print("#examples of healthy: ", sum(labels['level'] == 0)
+    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
+    print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
     X_train0 = []
     X_train1 = []
     X_train2 = []
@@ -44,7 +46,7 @@ def read_data_small(labels_dim):
       #Y_train3 = []
       #Y_train4 = []
 
-    limit=3500
+    limit=2500
 
     for idx,filename in enumerate(labels["image"]):
         #print("Idx:", idx, "filename", filename)
@@ -98,9 +100,12 @@ def read_data_small(labels_dim):
 def read_data_small_test(labels_dim):
     input_dir="/mnt/server-home/TUE/20184102/datasets/train"
     labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
-    labels = labels.sample(frac=1, random_state=1998)[26000:]
+    labels = labels.sample(frac=1, random_state=1998)[28000:]
     labels = labels.reset_index()
-
+    print("Shape of labels in testing is:", labels.shape)
+    print("#examples of healthy: ", sum(labels['level'] == 0)
+    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
+    print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
     X_test0 = []
     X_test1 = []
     X_test2 = []
@@ -113,7 +118,7 @@ def read_data_small_test(labels_dim):
     #Y_test3 = []
     #Y_test4 = []
 
-    limit= 1200
+    limit= 600
 
     for idx,filename in enumerate(labels["image"]):
         #img = load_img(input_dir+"/"+str(labels["level"][idx])+"/"+ filename+".tiff", target_size = (256, 256)) # this is a PIL image
@@ -159,7 +164,7 @@ def read_data_small_test(labels_dim):
     print ("TrainData size", X_test.shape, Y_test.shape)
     np.savez_compressed("/mnt/server-home/dc_group08/data/npz/testDataMediumTrenary.npz",X_test=X_test,Y_test=Y_test)
 
-#read_data_small(3)
+read_data_small(3)
 read_data_small_test(3)
 
 """
