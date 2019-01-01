@@ -31,7 +31,7 @@ def read_data_small(labels_dim):
     labels= pd.read_csv("/mnt/server-home/TUE/20184102/datasets/trainLabels.csv")
     labels = labels.sample(frac=1, random_state=1998).reset_index()[:28000]
     print("Shape of labels in triaining is:", labels.shape)
-    print("#examples of healthy: ", sum(labels['level'] == 0)
+    print("#examples of healthy: ", sum(labels['level'] == 0))
     print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
     print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
     X_train0 = []
@@ -103,7 +103,7 @@ def read_data_small_test(labels_dim):
     labels = labels.sample(frac=1, random_state=1998)[28000:]
     labels = labels.reset_index()
     print("Shape of labels in testing is:", labels.shape)
-    print("#examples of healthy: ", sum(labels['level'] == 0)
+    print("#examples of healthy: ", sum(labels['level'] == 0))
     print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
     print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
     X_test0 = []
