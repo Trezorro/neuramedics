@@ -70,7 +70,7 @@ def model_fn(labels_dim):
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+    model.add(MaxPooling2D(pool_size=(3, 3), strides=(1, 1)))
     model.add(Dropout(0.4))
     model.add(Flatten())
     model.add(Dense(128))
