@@ -31,7 +31,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import LeakyReLU
 from keras.layers.normalization import BatchNormalization
-from keras.layers import MaxoutDense
+from keras.layers import MaxoutDense, Activation
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils import np_utils
 from keras.backend import relu, sigmoid
@@ -74,7 +74,7 @@ def model_fn(labels_dim):
     model.add(LeakyReLU(alpha = 0.3))
     model.add(Dropout(0.4))
     model.add(MaxoutDense(labels_dim))
-    model.add(Softmax())
+    model.add(Activation('softmax'))
     compile_model(model)
     return model
 
