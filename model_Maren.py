@@ -25,6 +25,8 @@ import random
 import pandas as pd
 from keras import backend as K
 from keras import layers, models
+from keras import regularizers
+from keras import constraints
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import LeakyReLU
