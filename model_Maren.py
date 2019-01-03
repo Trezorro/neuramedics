@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Implements the Keras Sequential model. Ternary. Original architecture. TestDataSmall"""
+"""Implements the Keras Sequential model. Ternary. Maren architecture. Medium npz. Chaged the learning rate to 0.05."""
 
 import itertools
 import multiprocessing.pool
@@ -25,8 +25,6 @@ import random
 import pandas as pd
 from keras import backend as K
 from keras import layers, models
-from keras import regularizers
-from keras import constraints
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import LeakyReLU
@@ -47,7 +45,7 @@ from tensorflow.contrib.session_bundle import exporter
 import os
 
 INIT_CWD = os.getcwd()
-DATA_PATH = r'../TUE/20184102/datasets/'
+DATA_PATH = "/mnt/server-home/dc_group08/data/npz/"
 
 
 def model_fn(labels_dim):
@@ -68,18 +66,22 @@ def model_fn(labels_dim):
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(Dropout(0.5))
-    model.add(Flatten())
-    model.add(Dense(128))
+    model.add(Dropout(0.4))
+    model.add(MaxoutDense(128))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(Dropout(0.5))
-    model.add(Dense(labels_dim, activation = 'softmax'))
+    model.add(Dropout(0.4))
+    model.add(MaxoutDense(128))
+    model.add(LeakyReLU(alpha = 0.3))
+    model.add(Dropout(0.4))
+    model.add(Dense(labels_dim))
+    model.add(Activation('softmax'))
     compile_model(model)
     return model
 
 def compile_model(model):
+    adam = keras.optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer='Adam',
+                  optimizer=adam,
                   metrics=['accuracy'])
     return model
 
@@ -116,11 +118,12 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataSmall.npz")
+    data = np.load(DATA_PATH + "trainDataMediumTrenaryRich.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
-    Y_train = createTrinaryY(data["Y_train"])
+    Y_train = data["Y_train"]
+    #Y_train = createTrinaryY(data["Y_train"])
     #X_train, Y_train = take_random_sample(X_train.shape[0], X_train, Y_train, 1998) # X_train.shape[0] takes all the photos and shuffles
     #X_train, Y_train = take_balanced(3, X_train, Y_train, 7500)
     print("Training - Total examples per class", np.sum(Y_train, axis=0))
@@ -130,10 +133,11 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataSmall.npz")
+    data = np.load(DATA_PATH + "testDataMediumTrenaryRich.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
-    Y_test = createTrinaryY(data["Y_test"])
+    Y_test = data["Y_test"]
+    #Y_test = createTrinaryY(data["Y_test"])
     #X_test, Y_test = take_random_sample(X_test.shape[0], X_test, Y_test, 1998) # X_test.shape[0] takes all the photos and shuffles
     #X_test, Y_test = take_balanced(3, X_test, Y_test, 1400)
     print("Testing - Total examples per class", np.sum(Y_test, axis=0))
