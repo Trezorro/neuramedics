@@ -76,7 +76,7 @@ def model_fn(labels_dim):
     return model
 
 def compile_model(model):
-    adam = keras.optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    adam = keras.optimizers.Adam(lr=0.015, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     model.compile(loss=keras.losses.categorical_crossentropy,
                   optimizer=adam,
                   metrics=['accuracy'])
