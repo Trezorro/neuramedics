@@ -118,7 +118,7 @@ def dispatch(train_files,
         monitor='val_loss',
         verbose=2,
         #period=checkpoint_epochs,
-        save_best_only= True
+        save_best_only= True,
         mode='auto')
 
     # reduction
@@ -127,7 +127,7 @@ def dispatch(train_files,
         factor=0.5,
         patience=6,
         verbose=0,
-        mode = 'min',
+        mode = 'auto',
         min_delta=0.0001,
         cooldown=0,
         min_lr=0)
