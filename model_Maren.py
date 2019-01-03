@@ -73,8 +73,7 @@ def model_fn(labels_dim):
     model.add(Dense(256))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(Dropout(0.4))
-    model.add(Dense(labels_dim))
-    model.add(Activation('softmax'))
+    model.add(Dense(labels_dim, activation = 'softmax'))
     compile_model(model)
     return model
 
