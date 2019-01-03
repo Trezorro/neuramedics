@@ -115,11 +115,11 @@ def dispatch(train_files,
     # Model checkpoint callback
     checkpoint = keras.callbacks.ModelCheckpoint(
         checkpoint_path,
-        monitor='val_loss',
+        monitor='val_acc',
         verbose=2,
         #period=checkpoint_epochs,
         save_best_only= True,
-        mode='auto')
+        mode='max')
 
     # reduction
     reduce = keras.callbacks.ReduceLROnPlateau(
