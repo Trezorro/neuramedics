@@ -24,9 +24,8 @@ os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
 labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
 os.getcwd()
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
-sum((labels['level'] == 1) | (labels['level'] == 2))
 
-### Looking at medium npz rich 
+### Looking at medium npz rich
 import scipy.misc
 input_dir = "/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/seeImages"
 testMedium = np.load("testDataMediumTrenary.npz")
@@ -39,6 +38,7 @@ def saveImages(input_dir, X):
 #saveImages(input_dir,X_medium)
 plt.imshow(X_medium[800])
 plt.show()
+###
 
 data_train = np.load("trainDataSmall.npz")
 data_test = np.load("testDataSmall.npz")
@@ -71,7 +71,7 @@ checkClassImabalanceBinary(labels)
 
 ### Model evaluation part
 
-model = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
+model = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/checkpoint.30.hdf5')
 #model.evaluate(X_test, Y_test)
 
 
@@ -94,6 +94,11 @@ def get_binary_probabilities(preds):
 
 binary_probabs = get_binary_probabilities(predictions)
 binary_probabs[1]
+
+def get_ternary_probabilities(preds):
+    probabs = []
+    [probabs.append([i[0], i[1]+i[2], i[3]+i[4]]) for i in preds]
+    return np.array(probabs)
 
 def get_binary_predictions(preds, threshold):
     binary_preds = []
@@ -148,7 +153,73 @@ def plot_roc(predictions, labels): # more: https://scikit-plot.readthedocs.io/en
 
 ax = plot_roc(predictions, true_binary_Y)
 
+### Generating confusion matrix
+import itertools
+import numpy as np
+import matplotlib.pyplot as plt
 
+from sklearn import svm, datasets
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+
+
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.tight_layout()
+
+predictions = model.predict(X_test)
+"""
+#Compute confusion matrix for 5 labels
+predictions.argmax(axis = 1)
+cnf_matrix = confusion_matrix(Y_test.argmax(axis = 1), predictions.argmax(axis = 1))
+np.set_printoptions(precision=2)
+class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+
+# Plot normalized confusion matrix
+plt.figure()
+plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
+                      title='Normalized confusion matrix')
+plt.show()
+"""
+## Compute confusion_matrix for three classes
+Y_test3 = createTrinaryY(Y_test)
+predictions3 = predictions
+
+cnf_matrix = confusion_matrix(Y_test3.argmax(axis = 1), predictions3.argmax(axis = 1))
+plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=True,
+                      title='Normalized confusion matrix')
+
+plt.show()
 ### Testing out sampling functions
 
 def take_random_sample(size, X, Y,seed):

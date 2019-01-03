@@ -143,7 +143,7 @@ def dispatch(train_files,
         write_graph=True,
         embeddings_freq=0)
 
-    callbacks = [checkpoint, evaluation, tblog, reduce]
+    callbacks = [checkpoint, evaluation, tblog]
     #callbacks = [evaluation, tblog]
 
     [X_train, Y_train] = model.read_train_data()
