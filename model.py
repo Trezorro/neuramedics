@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Implements the Keras Sequential model. Ternary. Maren architecture. TernaryNpz"""
+"""Implements the Keras Sequential model. Ternary. Maren architecture. Medium npz. Chaged the learning rate to 0.05."""
 
 import itertools
 import multiprocessing.pool
@@ -76,8 +76,9 @@ def model_fn(labels_dim):
     return model
 
 def compile_model(model):
+    adam = keras.optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer='Adam',
+                  optimizer=adam,
                   metrics=['accuracy'])
     return model
 
@@ -114,7 +115,7 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataMediumTrenary.npz")
+    data = np.load(DATA_PATH + "trainDataMediumTrenaryRich.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -129,7 +130,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataMediumTrenary.npz")
+    data = np.load(DATA_PATH + "testDataMediumTrenaryRich.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = data["Y_test"]

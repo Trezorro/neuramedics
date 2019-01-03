@@ -117,8 +117,20 @@ def dispatch(train_files,
         checkpoint_path,
         monitor='val_loss',
         verbose=2,
-        period=checkpoint_epochs,
-        mode='max')
+        #period=checkpoint_epochs,
+        save_best_only= True
+        mode='auto')
+
+    # reduction
+    reduce = keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss',
+        factor=0.5,
+        patience=6,
+        verbose=0,
+        mode='auto',
+        min_delta=0.0001,
+        cooldown=0,
+        min_lr=0)
 
     # Continuous eval callback
     evaluation = ContinuousEval(eval_frequency,
@@ -131,7 +143,7 @@ def dispatch(train_files,
         write_graph=True,
         embeddings_freq=0)
 
-    callbacks = [checkpoint, evaluation, tblog]
+    callbacks = [checkpoint, evaluation, tblog, reduce]
     #callbacks = [evaluation, tblog]
 
     [X_train, Y_train] = model.read_train_data()
