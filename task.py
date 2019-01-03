@@ -127,7 +127,7 @@ def dispatch(train_files,
         factor=0.5,
         patience=6,
         verbose=0,
-        mode='auto',
+        mode = 'min',
         min_delta=0.0001,
         cooldown=0,
         min_lr=0)
