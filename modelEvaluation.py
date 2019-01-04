@@ -71,12 +71,14 @@ checkClassImabalanceBinary(labels)
 
 ### Model evaluation part
 
-model = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/checkpoint.30.hdf5')
+model5 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
+model3 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/best_so_far.hdf5')
 #model.evaluate(X_test, Y_test)
 
 
-predictions = model.predict(X_test)
-model.predict(X_test[:1])
+predictions5 = model5.predict(X_test)
+predictions3 = model3.predict(X_test)
+model5.predict(X_test[:1])
 
 def createBinaryY(one_hot_labels):
     lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
@@ -86,6 +88,7 @@ def createBinaryY(one_hot_labels):
 def createTrinaryY(one_hot_labels):
     lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
     return keras.utils.to_categorical(lst, num_classes=3)
+
 
 def get_binary_probabilities(preds):
     probabs = []
@@ -212,6 +215,7 @@ plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
 plt.show()
 """
 ## Compute confusion_matrix for three classes
+
 Y_test3 = createTrinaryY(Y_test)
 predictions3 = predictions
 
