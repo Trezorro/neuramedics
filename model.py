@@ -55,7 +55,7 @@ def model_fn(labels_dim):
     model = models.Sequential()
     model.add(Conv2D(64, kernel_size=(3, 3),
                      activation='relu',
-                     input_shape=(128, 128, 3)))
+                     input_shape=(256, 256, 3)))
     model.add(BatchNormalization())
     model.add(Conv2D(64, (7, 7), strides=(2, 2)))
     model.add(LeakyReLU(alpha = 0.3))
@@ -86,7 +86,7 @@ def model_fn(labels_dim):
 def compile_model(model):
     #adam = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer="adam",
+                  optimizer="Adam",
                   metrics=['accuracy'])
     return model
 
