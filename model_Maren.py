@@ -27,9 +27,8 @@ from keras import backend as K
 from keras import layers, models
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
-from keras.layers import LeakyReLU
+from keras.layers import LeakyReLU, MaxoutDense, Activation
 from keras.layers.normalization import BatchNormalization
-from keras.layers import MaxoutDense, Activation
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils import np_utils
 from keras.backend import relu, sigmoid
@@ -51,6 +50,8 @@ DATA_PATH = "/mnt/server-home/dc_group08/data/npz/"
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
 
+    """Create a Keras Sequential model with layers."""
+
     model = models.Sequential()
     model.add(Conv2D(64, kernel_size=(3, 3),
                      activation='relu',
@@ -65,8 +66,6 @@ def model_fn(labels_dim):
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(Conv2D(64, (3, 3)))
-    model.add(LeakyReLU(alpha = 0.3))
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
@@ -78,19 +77,21 @@ def model_fn(labels_dim):
     model.add(LeakyReLU(alpha = 0.3))
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Dropout(0.4))
-    model.add(Flatten())
     model.add(MaxoutDense(128))
-    model.add(Activation('softmax'))
+    model.add(LeakyReLU(alpha = 0.3))
+    model.add(Dropout(0.4))
+    model.add(MaxoutDense(128))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(Dropout(0.4))
     model.add(Dense(labels_dim, activation='softmax'))
     compile_model(model)
+
     return model
 
 def compile_model(model):
-    adam = keras.optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    #adam = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer=adam,
+                  optimizer="Adam",
                   metrics=['accuracy'])
     return model
 
