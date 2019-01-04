@@ -59,12 +59,12 @@ def model_fn(labels_dim):
     model.add(LeakyReLU(alpha = 0.3))
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(Dropout(0.4))
+    #model.add(Dropout(0.4))
     model.add(Flatten())
     model.add(Dense(128))
     model.add(LeakyReLU(alpha = 0.3))
     model.add(BatchNormalization())
-    model.add(Dropout(0.4))
+    #model.add(Dropout(0.4))
     model.add(Dense(labels_dim, activation='softmax'))
     compile_model(model)
     return model
@@ -86,7 +86,7 @@ def createBinaryY(one_hot_labels):
 def createTrinaryY(one_hot_labels):
     lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
     return keras.utils.to_categorical(lst, num_classes=3)
-    
+
 def take_random_sample(size, X, Y,seed):
     zipped = list(zip(X,Y))
     random.Random(seed).shuffle(zipped)
