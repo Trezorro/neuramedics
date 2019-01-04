@@ -56,28 +56,28 @@ def model_fn(labels_dim):
     model.add(Conv2D(64, kernel_size=(3, 3),
                      activation='relu',
                      input_shape=(256, 256, 3)))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(Conv2D(64, (7, 7), strides=(2, 2)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    #model.add(Dropout(0.4))
+    model.add(Dropout(0.4))
     model.add(Flatten())
     model.add(Dense(128))
     model.add(LeakyReLU(alpha = 0.3))
-    model.add(BatchNormalization())
-    #model.add(Dropout(0.4))
+    #model.add(BatchNormalization())
+    model.add(Dropout(0.4))
     model.add(Dense(labels_dim, activation='softmax'))
     compile_model(model)
 
@@ -123,7 +123,7 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataMediumTrenaryRich.npz")
+    data = np.load(DATA_PATH + "trainDataMediumTrenary.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -138,7 +138,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataMediumTrenaryRich.npz")
+    data = np.load(DATA_PATH + "testDataMediumTrenary.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = data["Y_test"]
