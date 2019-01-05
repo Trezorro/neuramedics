@@ -1,0 +1,62 @@
+#!/bin/bash
+set -e
+cd "/home/dc_group08/"
+
+printf "\nWhat branch do you want to run? (no spaces please): "
+read branchname
+
+printf "Fetching from remote git repo...\n"
+git -C "/home/dc_group08/neuramedics" fetch origin
+
+
+if [ ! -d "$branchname" ]; then
+  printf "\n\"$branchname\" doesn't have it's own directory on the server yet. Let's fix that. \nCreating new worktree (directory with you branch, named \"$branchname\") in the dc_group08 directory for you...\n"
+  git -C "/home/dc_group08/neuramedics" worktree add "/home/dc_group08/$branchname" origin/$branchname
+  printf "Checking out worktree...\n"
+  git -C "/home/dc_group08/$branchname" checkout origin/$branchname
+else
+	printf "Switching to worktree $branchname...\n"
+fi
+
+printf "Pulling worktree\n"
+git -C "/home/dc_group08/$branchname" pull origin $branchname
+printf "\n\nSubmitting new job to the cluster. Job file should be in your branch at: \n\"/home/dc_group08/$branchname/run_code\". \n	"
+jobid=$(sbatch -p zirconium --gres=gpu:1 "/home/dc_group08/$branchname/run_code" | tr -dc '0-9' )
+if [ $? -eq 0 ]; then
+	printf "\n Submitted batch job $jobid \n\n Current group queue:\n"
+else
+    printf "\nSorry, something went wrong. Maybe \"/home/dc_group08/$branchname/run_code\" is missing. Could you check that the run_code file is in your branch please?"
+	exit;
+fi
+
+squeue -u dc_group08
+
+printf "\nWaiting for slurm.out\n"
+
+while [ ! -f slurm*.out ]; do sleep 1; done
+mv *.out slurmout
+slurmfile=$(find slurmout -type f -name *$jobid*)
+printf "Moved output slurm to slurmout directory.\n\n"
+
+printf "Display your job's slurm output saved so far? Type 1 or 2.\n"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) printf "Contents of $slurmfile:\n ---------------------------------------------------\n" && cat "$slurmfile" && printf " --------------------END-OF-FILE--------------------\n\n"; break;; 
+        No ) break;;
+    esac
+done
+
+printf "\nCurrent group 08 queue:\n"
+squeue -u dc_group08
+echo
+
+printf "Would you like to cancel job $jobid, which you just subitted (1/2)?  \n"
+
+select yn in "No, keep it running!" "Yes, cancel. It sucked anyway."; do
+    case $yn in
+        "No, keep it running!" ) printf "\nJob $jobid will remain in queue."; break;; 
+        "Yes, cancel. It sucked anyway." ) scancel $jobid; printf "\nJob $jobid cancelled\n\n"; break;;
+    esac
+done
+
+exit 0
