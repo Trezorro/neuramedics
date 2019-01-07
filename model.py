@@ -123,7 +123,7 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    data = np.load(DATA_PATH + "trainDataMediumTrenary.npz")
+    data = np.load(DATA_PATH + "trainDataMediumTrenaryAugmentIndep.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -138,7 +138,7 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    data = np.load(DATA_PATH + "testDataMediumTrenary.npz")
+    data = np.load(DATA_PATH + "testDataMediumTrenaryAugmentIndep.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = data["Y_test"]
