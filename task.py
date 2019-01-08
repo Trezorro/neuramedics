@@ -110,7 +110,7 @@ def dispatch(train_files,
     # Unhappy hack to work around h5py not being able to write to GCS.
     # Force snapshots and saves to local filesystem, then copy them over to GCS.
     #checkpoint_path = FILE_PATH
-    checkpoint_path = "best_so_far.hdf5"
+    checkpoint_path = "best_so_far_batch_rich.hdf5"
     checkpoint_path = os.path.join(job_dir, checkpoint_path)
 
     # Model checkpoint callback
@@ -153,7 +153,8 @@ def dispatch(train_files,
         width_shift_range=0.1,
         height_shift_range=0.1,
         rotation_range=15,
-        zoom_range=0.1)
+        zoom_range=0.1,
+        horizontal_flip=True)
 
     retinopathy_model.fit_generator(
         datagen.flow(X_train, Y_train, batch_size=100),
