@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 plt.rcParams['figure.figsize'] = 12,9
 
 import cv2 as cv
+import itertools
+from sklearn.metrics import confusion_matrix
+import scipy.misc
 
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
 labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
@@ -26,7 +29,7 @@ os.getcwd()
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
 
 ### Looking at medium npz rich
-import scipy.misc
+
 input_dir = "/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/seeImages"
 testMedium = np.load("testDataMediumTrenary.npz")
 X_medium = testMedium['X_test'].astype(np.float32)
@@ -40,6 +43,7 @@ plt.imshow(X_medium[800])
 plt.show()
 ###
 
+#Opening the default 5 class X and Y
 data_train = np.load("trainDataSmall.npz")
 data_test = np.load("testDataSmall.npz")
 data_train.files
@@ -50,121 +54,42 @@ Y_train = data_train["Y_train"].astype(np.float32)
 X_test = data_test["X_test"].astype(np.float32)
 Y_test = data_test["Y_test"].astype(np.float32)
 
+### Checking the ternary model on augmented data with presumably 76% accuracy
 
+#Loading the preprocessed npz
 
-def checkClassImabalanceBinary(labels):
-    counter_class0 = 0
-    counter_class1 = 0
-    for idx, filename in enumerate(labels['image'][85000:]):
-        #img = cv.imread(dir+filename+'.jpeg')
-        #img = img_to_array(img)
-        if labels['level'][idx]==0:
-            counter_class0 +=1
-        else:
-            counter_class1 += 1
-    print("Count of healthy: ", counter_class0)
-    print("Count of sick: ", counter_class1)
+data_test_augment = np.load("testDataMediumTrenaryAugmentIndep.npz")
+X_test_augment = data_test_augment["X_test"].astype(np.float32)
+Y_test_augment = data_test_augment["Y_test"].astype(np.float32)
 
-checkClassImabalanceBinary(labels)
-
-
-
-### Model evaluation part
-
-model5 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
 model3 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/best_so_far.hdf5')
+eval_model_augment = model3.evaluate(X_test_augment, Y_test_augment)
+predictions3 = model3.predict(X_test_augment)
+
+
+### Checking the ternary model on not-augmented data with presumably 61% accuracy
+data_test_no_augment = np.load("testDataMediumTrenary.npz")
+X_test_no_augment = data_test_no_augment["X_test"].astype(np.float32)
+Y_test_no_augment = data_test_no_augment["Y_test"].astype(np.float32)
+
+model3NoAug = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/best_so_farNoPre.hdf5')
+eval_model_no_augment = model3NoAug.evaluate(X_test_no_augment, Y_test_no_augment)
+eval_model_no_augment
+predictions3_no_augment= model3NoAug.predict(X_test_no_augment)
+
+
+
+"""
+model5 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
 #model.evaluate(X_test, Y_test)
 
 
 predictions5 = model5.predict(X_test)
-predictions3 = model3.predict(X_test)
+#predictions3 = model3.predict(X_test)
 model5.predict(X_test[:1])
-
-def createBinaryY(one_hot_labels):
-    lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
-    return keras.utils.to_categorical(lst, num_classes=2)
-
-
-def createTrinaryY(one_hot_labels):
-    lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
-    return keras.utils.to_categorical(lst, num_classes=3)
-
-
-def get_binary_probabilities(preds):
-    probabs = []
-    [probabs.append([i[0], i[1]+i[2]+i[3]+i[4]]) for i in preds]
-    return np.array(probabs)
-
-binary_probabs = get_binary_probabilities(predictions)
-binary_probabs[1]
-
-def get_ternary_probabilities(preds):
-    probabs = []
-    [probabs.append([i[0], i[1]+i[2], i[3]+i[4]]) for i in preds]
-    return np.array(probabs)
-
-def get_binary_predictions(preds, threshold):
-    binary_preds = []
-    [binary_preds.append([1,0]) if i[0]> threshold else binary_preds.append([0,1]) for i in preds]
-    return binary_preds
-
-true_binary_Y = get_binary_predictions(Y_test,0.5)
-pred_binary_Y = get_binary_predictions(predictions,0.5)
-
-
-def get_accuracy(preds, labels):
-    counter = 0
-    for i in range(len(preds)):
-        if preds[i]==labels[i]:
-            counter +=1
-    return counter/len(preds)
-
-get_accuracy(pred_binary_Y, true_binary_Y)
-
-def get_sensitivity(preds,labels):
-    tp = 0
-    positivies = 0
-    for i in range(len(preds)):
-        if labels[i] == [0,1]:
-            positivies += 1
-            if preds[i]==labels[i]:
-                tp +=1
-    return tp/positivies
-
-get_sensitivity(pred_binary_Y, true_binary_Y)
-
-def get_specificity(preds, labels):
-    tn = 0
-    negatives = 0
-    for i in range(len(preds)):
-        if labels[i] == [1,0]:
-            negatives += 1
-            if preds[i]==labels[i]:
-                tn +=1
-    return tn/negatives
-
-get_specificity(pred_binary_Y, true_binary_Y)
-
-
-
-def plot_roc(predictions, labels): # more: https://scikit-plot.readthedocs.io/en/stable/metrics.html
-    probabs = get_binary_probabilities(predictions)
-    lables_no_hot = np.array([0 if i[0]==1 else 1 for i in labels])
-    skplt.metrics.plot_roc(lables_no_hot, probabs, plot_micro = False, plot_macro=False)
-    plt.show()
-
-
-ax = plot_roc(predictions, true_binary_Y)
+"""
 
 ### Generating confusion matrix
-import itertools
-import numpy as np
-import matplotlib.pyplot as plt
-
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -200,7 +125,7 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label')
     plt.tight_layout()
 
-predictions = model.predict(X_test)
+
 """
 #Compute confusion matrix for 5 labels
 predictions.argmax(axis = 1)
@@ -214,16 +139,151 @@ plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
                       title='Normalized confusion matrix')
 plt.show()
 """
-## Compute confusion_matrix for three classes
+## Compute confusion_matrix for three classes augmented
 
-Y_test3 = createTrinaryY(Y_test)
-predictions3 = predictions
 
-cnf_matrix = confusion_matrix(Y_test3.argmax(axis = 1), predictions3.argmax(axis = 1))
-plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=True,
+
+## Compute confusion_matrix for three classes not augmented
+
+
+
+### Model evaluation part
+def createBinaryY(one_hot_labels):
+    lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
+    return keras.utils.to_categorical(lst, num_classes=2)
+
+
+def createTrinaryY(one_hot_labels):
+    lst = [0 if i[0] == 1 else 1 if (i[1] == 1 or i[2]==1) else 2 for i in one_hot_labels]
+    return keras.utils.to_categorical(lst, num_classes=3)
+
+def get_binary_probabilities(preds):
+    probabs = []
+    [probabs.append( [ i[0], (i[1]+i[2])]) for i in preds]
+    return np.array(probabs)
+
+
+binary_probabs = get_binary_probabilities(predictions3_no_augment)
+binary_probabs[:3]
+
+def get_ternary_probabilities(preds):
+    probabs = []
+    [probabs.append([i[0], i[1]+i[2], i[3]+i[4]]) for i in preds]
+    return np.array(probabs)
+
+def get_binary_predictions(preds, threshold):
+    preds = get_binary_probabilities(preds)
+    binary_preds = []
+    [binary_preds.append([1,0]) if i[0]> threshold else binary_preds.append([0,1]) for i in preds]
+    return binary_preds
+
+def get_accuracy(preds, labels):
+    counter = 0
+    for i in range(len(preds)):
+        if preds[i]==labels[i]:
+            counter +=1
+    return counter/len(preds)
+
+
+
+def get_best_accuracy(true, pred):
+    best = {"Accuracy":0, "Threshold": 0}
+    acc = 0
+    for i in np.arange(0,1,0.01):
+        true_binary_Y = get_binary_predictions(true,i)
+        pred_binary_Y = get_binary_predictions(pred,i)
+        acc = get_accuracy(pred_binary_Y, true_binary_Y)
+        if acc > best["Accuracy"]:
+            best["Accuracy"] = acc
+            best["Threshold"] = i
+    return best
+
+def get_sensitivity(preds,labels):
+    tp = 0
+    positivies = 0
+    for i in range(len(preds)):
+        if labels[i] == [0,1]:
+            positivies += 1
+            if preds[i]==labels[i]:
+                tp +=1
+    return tp/positivies
+def get_specificity(preds, labels):
+    tn = 0
+    negatives = 0
+    for i in range(len(preds)):
+        if labels[i] == [1,0]:
+            negatives += 1
+            if preds[i]==labels[i]:
+                tn +=1
+    return tn/negatives
+
+def plot_roc_binary(predictions, labels): # more: https://scikit-plot.readthedocs.io/en/stable/metrics.html
+    probabs = get_binary_probabilities(predictions)
+    lables_no_hot = np.array([0 if i[0]==1 else 1 for i in labels])
+    skplt.metrics.plot_roc(lables_no_hot, probabs, plot_micro = False, plot_macro=False)
+    plt.show()
+
+#ax = plot_roc_binary(predictions3_no_augment, true_binary_Y)
+
+def plot_roc_ternary(predictions, labels): # more: https://scikit-plot.readthedocs.io/en/stable/metrics.html
+    probabs = predictions
+    lables_no_hot = np.array([0 if i[0]==1 else 1 if i[1] ==1 else 2 for i in labels])
+    skplt.metrics.plot_roc(lables_no_hot, probabs, plot_micro = False, plot_macro=False)
+
+
+
+### Model without pre processing:
+
+#Confusion matrix
+
+class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+cnf_matrix = confusion_matrix(Y_test_no_augment.argmax(axis = 1), predictions3_no_augment.argmax(axis = 1))
+plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
                       title='Normalized confusion matrix')
-
+plt.savefig("confusion_61%.png")
 plt.show()
+
+# Evaluation measueres
+
+true_binary_Y = get_binary_predictions(Y_test_no_augment,0.5)
+pred_binary_Y = get_binary_predictions(predictions3_no_augment,0.75)
+get_accuracy(pred_binary_Y, true_binary_Y)
+#get_best_accuracy(Y_test_no_augment, predictions3_no_augment)
+get_sensitivity(pred_binary_Y, true_binary_Y)
+get_specificity(pred_binary_Y, true_binary_Y)
+
+# Roc curve
+
+plot_roc_ternary(predictions3_no_augment, Y_test_no_augment)
+plt.savefig("RocModelNoPre61.png")
+plt.show()
+
+### Model with pre processing:
+
+# Confusion Matrix
+class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+cnf_matrix = confusion_matrix(Y_test_augment.argmax(axis = 1), predictions3.argmax(axis = 1))
+plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
+                      title='Normalized confusion matrix')
+plt.savefig("confusion_too_good.png")
+plt.show()
+
+#Evaluation measures
+
+true_binary_Y = get_binary_predictions(Y_test_augment,0.5)
+pred_binary_Y = get_binary_predictions(predictions3,0.5)
+get_accuracy(pred_binary_Y, true_binary_Y)
+get_best_accuracy(Y_test_augment, predictions3)
+get_sensitivity(pred_binary_Y, true_binary_Y)
+get_specificity(pred_binary_Y, true_binary_Y)
+
+#Roc curve
+
+plot_roc_ternary(predictions3, Y_test_augment)
+plt.savefig("RocModelPre76.png")
+plt.show()
+
+
 ### Testing out sampling functions
 
 def take_random_sample(size, X, Y,seed):

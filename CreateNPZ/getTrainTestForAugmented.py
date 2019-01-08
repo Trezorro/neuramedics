@@ -51,3 +51,13 @@ test_images_csv.groupby(by=['level']).aggregate("count")
 
 train_images_csv.to_csv("train_images_augment.csv")
 test_images_csv.to_csv("test_images_augment.csv")
+
+
+### Checking the independence
+
+train_images = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/train_images_augment.csv", usecols=['image', 'level'])
+test_images = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/test_images_augment.csv", usecols=['image', 'level'])
+
+uniqe_ids_train = set(train_images['image'].apply(hyphen_split))
+uniqe_ids_test = set(test_images['image'].apply(hyphen_split))
+any(i in uniqe_ids_train for i in uniqe_ids_test)
