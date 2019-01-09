@@ -4,7 +4,7 @@ import os
 import time
 import pandas as pd
 
-dir = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images/'
+dir = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images_FullRess'
 labels = pd.read_csv('/mnt/server-home/TUE/20184102/datasets/trainLabels.csv')
 
 
@@ -46,7 +46,7 @@ print("not_valid_imgs succesfully transformed to data frame")
 os.chdir("/mnt/server-home/dc_group08/data/preprocessingBlazej/")
 
 
-labels_augmented.to_csv("labels_augmented.csv")
-print("labels_augmented file saved at:", os.getcwd())
+labels_augmented.to_csv("labels_augmented_fixed.csv")
+print("labels_augmented_fixed file saved at:", os.getcwd())
 not_valid_imgs.to_csv("not_valid_imgs.csv")
-print("not_valid_imgs file saved at:", os.getcwd()
+print("not_valid_imgs file saved at:", os.getcwd())

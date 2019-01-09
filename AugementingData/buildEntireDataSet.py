@@ -5,7 +5,7 @@ import time
 import pandas as pd
 
 dirin = '/mnt/server-home/TUE/20184102/datasets/train/'
-dirout = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images/'
+dirout = '/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images_FullRes/'
 labels = pd.read_csv('/mnt/server-home/TUE/20184102/datasets/trainLabels.csv')
 
 def rescale(img, v):
@@ -57,6 +57,14 @@ def scaleRadius(img,scale):
     res = cv.resize(img,(0,0),fx=s,fy=s)
     return(res)
 
+def crop_img(img, scale=1.0):
+    center_x, center_y = img.shape[1] / 2, img.shape[0] / 2
+    width_scaled, height_scaled = img.shape[1] * scale, img.shape[0] * scale
+    left_x, right_x = center_x - width_scaled / 2, center_x + width_scaled / 2
+    top_y, bottom_y = center_y - height_scaled / 2, center_y + height_scaled / 2
+    img_cropped = img[int(top_y):int(bottom_y), int(left_x):int(right_x)]
+    return (img_cropped)
+
 image_paths = [file.strip('.jpeg') for file in os.listdir(dirin)]
 sick_paths  = [file for file in image_paths if int(labels.loc[labels['image']==file]['level']) != 0]
 healthy_paths = [file for file in image_paths if int(labels.loc[labels['image']==file]['level']) == 0]
@@ -69,18 +77,21 @@ def preprocess_sick(dirin, dirout):
     step = 0
     x = len(sick_paths)
 
-    rotations = [90,120,180,270]
+    rotations = [90,120,210,270]
 
     for file in sick_paths:
         try:
             img_org = cv.imread(dirin + "/" +file + '.jpeg')
-            img_org = resize(img_org, 400,400)
+            img_org = scaleRadius(img_org, 300)
             img_org = grayBlur(img_org, 300)
+            img_org = crop_img(img_org, scale=0.8)
+            #img_org = resize(img_org, 256,256)
             cv.imwrite(dirout+file.strip(".jpeg") + "_" + "original" + ".jpeg", img_org)
             img_mirrored = mirror(img_org)
             cv.imwrite(dirout+file.strip(".jpeg") + "_" + "mirrored" + ".jpeg", img_mirrored)
             for k in rotations:
                 img = rotate(img_org,k)
+                img = crop_img(img, scale=0.88)
                 cv.imwrite(dirout+file.strip(".jpeg") + "_" + str(k) + ".jpeg", img)
             i+=1
         except:
@@ -105,8 +116,10 @@ def preprocess_healthy(dirin, dirout):
     for file in healthy_paths:
         try:
             img_org = cv.imread(dirin + "/" +file + '.jpeg')
-            img_org = resize(img_org, 400,400)
+            img_org = scaleRadius(img_org, 300)
             img_org = grayBlur(img_org, 300)
+            img_org = crop_img(img_org, scale=0.8)
+            #img_org = resize(img_org, 256,256)
             cv.imwrite(dirout+file.strip(".jpeg") + "_" + "original" + ".jpeg", img_org)
             img_mirrored = mirror(img_org)
             cv.imwrite(dirout+file.strip(".jpeg") + "_" + "mirrored" + ".jpeg", img_mirrored)

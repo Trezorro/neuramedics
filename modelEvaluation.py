@@ -139,12 +139,6 @@ plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
                       title='Normalized confusion matrix')
 plt.show()
 """
-## Compute confusion_matrix for three classes augmented
-
-
-
-## Compute confusion_matrix for three classes not augmented
-
 
 
 ### Model evaluation part
@@ -246,7 +240,7 @@ plt.show()
 # Evaluation measueres
 
 true_binary_Y = get_binary_predictions(Y_test_no_augment,0.5)
-pred_binary_Y = get_binary_predictions(predictions3_no_augment,0.75)
+pred_binary_Y = get_binary_predictions(predictions3_no_augment,0.74)
 get_accuracy(pred_binary_Y, true_binary_Y)
 #get_best_accuracy(Y_test_no_augment, predictions3_no_augment)
 get_sensitivity(pred_binary_Y, true_binary_Y)
@@ -259,6 +253,19 @@ plt.savefig("RocModelNoPre61.png")
 plt.show()
 
 ### Model with pre processing:
+data_dep= np.load("testDataMediumTrenaryAugment.npz")
+X_test_augment_dep = data_dep["X_test"].astype(np.float32)
+Y_test_augment_dep = data_dep["Y_test"].astype(np.float32)
+eval_model_augment_dep = model3.evaluate(X_test_augment_dep, Y_test_augment_dep)
+eval_model_augment_dep
+predictions3_augment_dep = model3.predict(X_test_augment_dep)
+
+class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+cnf_matrix = confusion_matrix(Y_test_augment_dep.argmax(axis = 1), predictions3_augment_dep.argmax(axis = 1))
+plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
+                      title='Normalized confusion matrix')
+#plt.savefig("confusion_too_good.png")
+plt.show()
 
 # Confusion Matrix
 class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
