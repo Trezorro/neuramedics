@@ -28,13 +28,13 @@ def completeWithAugmentedData(X_tr,Y_tr,limit):
   return [X_tr,Y_tr]
 
 def read_data_small(labels_dim):
-    input_dir="/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images"
-    labels= pd.read_csv("/mnt/server-home/dc_group08/data/preprocessingBlazej/augmented_labels.csv")
-    labels = labels.sample(frac=1, random_state=1998).reset_index()[:80000]
+    input_dir="/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images_FullRess"
+    labels= pd.read_csv("/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images_augment_fixed.csv")
+    labels = labels.sample(frac=1, random_state=1998).reset_index()
     print("Shape of labels in triaining is:", labels.shape)
     print("#examples of healthy: ", sum(labels['level'] == 0))
-    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
-    print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
+    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 1)))
+    print("#examples of class 3 and 4:", sum((labels['level'] == 2) | (labels['level'] == 2)))
     X_train0 = []
     X_train1 = []
     X_train2 = []
@@ -47,7 +47,7 @@ def read_data_small(labels_dim):
       #Y_train3 = []
       #Y_train4 = []
 
-    limit= 6000
+    limit= 7686
 
     for idx,filename in enumerate(labels["image"]):
         #print("Idx:", idx, "filename", filename)
@@ -62,13 +62,15 @@ def read_data_small(labels_dim):
             Y_train0.append(0)
 
 
-        if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_train1)<limit)):
+        #if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_train1)<limit)):
+        if ( (labels["level"][idx]==1) and (len(X_train1)<limit) ):
             X_train1.append(x)
             #Y_train1.append(labels["level"][idx])
             Y_train1.append(1)
 
 
-        if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_train2)<limit)):
+        #if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_train2)<limit)):
+        if ( (labels["level"][idx]==2) and (len(X_train2)<limit) ):
             X_train2.append(x)
             #Y_train2.append(labels["level"][idx])
             Y_train2.append(2)
@@ -96,17 +98,17 @@ def read_data_small(labels_dim):
     Y_train = keras.utils.to_categorical(Y_train, labels_dim)
 
     print ("TrainData size", X_train.shape, Y_train.shape)
-    np.savez_compressed("/mnt/server-home/dc_group08/data/npz/trainDataMediumTrenary.npz",X_train=X_train,Y_train=Y_train)
+    np.savez_compressed("/mnt/server-home/dc_group08/data/npz/trainDataMediumTrenaryAugmentIndep.npz",X_train=X_train,Y_train=Y_train)
 
 def read_data_small_test(labels_dim):
-    input_dir="/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images"
-    labels= pd.read_csv("/mnt/server-home/dc_group08/data/preprocessingBlazej/augmented_labels.csv")
-    labels = labels.sample(frac=1, random_state=1998)[80000:]
+    input_dir="/mnt/server-home/dc_group08/data/preprocessingBlazej/train_images_FullRess"
+    labels= pd.read_csv("/mnt/server-home/dc_group08/data/preprocessingBlazej/test_images_augment_fixed.csv")
+    labels = labels.sample(frac=1, random_state=1998)
     labels = labels.reset_index()
     print("Shape of labels in testing is:", labels.shape)
     print("#examples of healthy: ", sum(labels['level'] == 0))
-    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 2)))
-    print("#examples of class 3 and 4:", sum((labels['level'] == 3) | (labels['level'] == 4)))
+    print("#Examples of class 1 and 2:",sum((labels['level'] == 1) | (labels['level'] == 1)))
+    print("#examples of class 3 and 4:", sum((labels['level'] == 2) | (labels['level'] == 2)))
     X_test0 = []
     X_test1 = []
     X_test2 = []
@@ -119,7 +121,7 @@ def read_data_small_test(labels_dim):
     #Y_test3 = []
     #Y_test4 = []
 
-    limit= 1500
+    limit= 1800
 
     for idx,filename in enumerate(labels["image"]):
         #img = load_img(input_dir+"/"+str(labels["level"][idx])+"/"+ filename+".tiff", target_size = (256, 256)) # this is a PIL image
@@ -131,13 +133,15 @@ def read_data_small_test(labels_dim):
           #Y_test0.append(labels["level"][idx])
           Y_test0.append(0)
 
-        if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_test1)<limit)):
+        #if ( ((labels["level"][idx]==1) or (labels["level"][idx]==2)) and (len(X_test1)<limit)):
+        if ((labels["level"][idx]==1)and(len(X_test1)<limit)):
           X_test1.append(x)
           #Y_test1.append(labels["level"][idx])
           Y_test1.append(1)
 
 
-        if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_test2)<limit)):
+        #if ( ((labels["level"][idx]==3) or (labels["level"][idx]==4)) and (len(X_test2)<limit)):
+        if ((labels["level"][idx]==2)and(len(X_test2)<limit)):
           X_test2.append(x)
           #Y_test2.append(labels["level"][idx])
           Y_test2.append(2)
@@ -163,7 +167,7 @@ def read_data_small_test(labels_dim):
     Y_test = keras.utils.to_categorical(Y_test, labels_dim)
 
     print ("TrainData size", X_test.shape, Y_test.shape)
-    np.savez_compressed("/mnt/server-home/dc_group08/data/npz/testDataMediumTrenary.npz",X_test=X_test,Y_test=Y_test)
+    np.savez_compressed("/mnt/server-home/dc_group08/data/npz/testDataMediumTrenaryAugmentIndep.npz",X_test=X_test,Y_test=Y_test)
 
 read_data_small(3)
 read_data_small_test(3)

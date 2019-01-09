@@ -46,7 +46,6 @@ import os
 INIT_CWD = os.getcwd()
 DATA_PATH = "/mnt/server-home/dc_group08/data/npz/"
 
-
 def model_fn(labels_dim):
     """Create a Keras Sequential model with layers."""
 
@@ -123,8 +122,8 @@ def take_balanced(CLASS_SIZE, X, Y, sample_num):
 def read_train_data():
     start_time = time.time()
     print("Start Read Train Data")
-    #data = np.load(DATA_PATH + "trainDataMediumTrenaryAugmentIndep.npz")
-    data = np.load(DATA_PATH + "trainDataMediumTrenaryRich.npz")
+    data = np.load(DATA_PATH + "trainDataMediumTrenaryAugmentIndep_fixed.npz")
+    #data = np.load(DATA_PATH + "trainDataMediumTrenaryRich.npz")
     print("Train data read --- %s seconds ---" % (time.time() - start_time))
     print(data)
     X_train = data["X_train"] # TODO
@@ -139,8 +138,8 @@ def read_train_data():
 def read_test_data():
     start_time = time.time()
     print("Start Read Test Data")
-    #data = np.load(DATA_PATH + "testDataMediumTrenaryAugmentIndep.npz")
-    data = np.load(DATA_PATH + "testDataMediumTrenaryRich.npz")
+    data = np.load(DATA_PATH + "testDataMediumTrenaryAugmentIndep_fixed.npz")
+    #data = np.load(DATA_PATH + "testDataMediumTrenaryRich.npz")
     print("Test data read --- %s seconds ---" % (time.time() - start_time))
     X_test = data["X_test"]
     Y_test = data["Y_test"]

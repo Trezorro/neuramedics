@@ -110,7 +110,7 @@ def dispatch(train_files,
     # Unhappy hack to work around h5py not being able to write to GCS.
     # Force snapshots and saves to local filesystem, then copy them over to GCS.
     #checkpoint_path = FILE_PATH
-    checkpoint_path = "best_so_far_batch_rich.hdf5"
+    checkpoint_path = "best_so_far_augment_fixed.hdf5"
     checkpoint_path = os.path.join(job_dir, checkpoint_path)
 
     # Model checkpoint callback
