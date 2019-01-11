@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 
-all_labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/labels_augmented_fixed.csv", usecols=['image', 'level'])
-original_labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/trainLabels.csv")
+all_labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/csv_files/labels_augmented_fixed.csv", usecols=['image', 'level'])
+original_labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/csv_files/trainLabels.csv")
 
 all_labels = all_labels.sample(frac =1, random_state = 1998)
 def convert_ternary(row):

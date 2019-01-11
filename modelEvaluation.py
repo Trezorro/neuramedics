@@ -23,10 +23,10 @@ import itertools
 from sklearn.metrics import confusion_matrix
 import scipy.misc
 
-os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
-labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/augmented_labels.csv")
+os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/")
+labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/csv_files/augmented_labels.csv")
 os.getcwd()
-os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1")
+os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/npz_files/")
 
 ### Looking at medium npz rich
 
@@ -65,6 +65,17 @@ Y_test_augment = data_test_augment["Y_test"].astype(np.float32)
 model3 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/best_so_far.hdf5')
 eval_model_augment = model3.evaluate(X_test_augment, Y_test_augment)
 predictions3 = model3.predict(X_test_augment)
+
+#Loading the preprocessed  npz fixed
+
+data_test_augment_fixed = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/npz_files/testDataMediumTrenaryAugmentIndep_fixed.npz")
+X_test_augment_fixed = data_test_augment_fixed["X_test"].astype(np.float32)
+Y_test_augment_fixed = data_test_augment_fixed["Y_test"].astype(np.float32)
+
+model3_aug_fixed = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/Models/maren_augment_indep_fixed_79.hdf5')
+eval_model_augment_fixed= model3_aug_fixed.evaluate(X_test_augment_fixed, Y_test_augment_fixed)
+eval_model_augment_fixed
+predictions3_fixed = model3_aug_fixed.predict(X_test_augment_fixed)
 
 
 ### Checking the ternary model on not-augmented data with presumably 61% accuracy
@@ -260,13 +271,6 @@ eval_model_augment_dep = model3.evaluate(X_test_augment_dep, Y_test_augment_dep)
 eval_model_augment_dep
 predictions3_augment_dep = model3.predict(X_test_augment_dep)
 
-class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
-cnf_matrix = confusion_matrix(Y_test_augment_dep.argmax(axis = 1), predictions3_augment_dep.argmax(axis = 1))
-plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
-                      title='Normalized confusion matrix')
-#plt.savefig("confusion_too_good.png")
-plt.show()
-
 # Confusion Matrix
 class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
 cnf_matrix = confusion_matrix(Y_test_augment.argmax(axis = 1), predictions3.argmax(axis = 1))
@@ -290,6 +294,38 @@ plot_roc_ternary(predictions3, Y_test_augment)
 plt.savefig("RocModelPre76.png")
 plt.show()
 
+### Model with pre processing: fixed
+data_test_augment_fixed = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/npz_files/testDataMediumTrenaryAugmentIndep_fixed.npz")
+X_test_augment_fixed = data_test_augment_fixed["X_test"].astype(np.float32)
+Y_test_augment_fixed = data_test_augment_fixed["Y_test"].astype(np.float32)
+
+model3_aug_fixed = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/Models/maren_augment_indep_fixed_79.hdf5')
+eval_model_augment_fixed= model3_aug_fixed.evaluate(X_test_augment_fixed, Y_test_augment_fixed)
+eval_model_augment
+predictions3_fixed = model3_aug_fixed.predict(X_test_augment_fixed)
+
+# Confusion Matrix
+class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+cnf_matrix = confusion_matrix(Y_test_augment_fixed.argmax(axis = 1), predictions3_fixed.argmax(axis = 1))
+plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
+                      title='Normalized confusion matrix')
+plt.savefig("fixed_cnf_79.png")
+plt.show()
+
+#Evaluation measures
+
+true_binary_Y = get_binary_predictions(Y_test_augment_fixed,0.5)
+pred_binary_Y = get_binary_predictions(predictions3_fixed,0.61)
+get_accuracy(pred_binary_Y, true_binary_Y)
+#get_best_accuracy(Y_test_augment_fixed, predictions3_fixed)
+get_sensitivity(pred_binary_Y, true_binary_Y)
+get_specificity(pred_binary_Y, true_binary_Y)
+
+#Roc curve
+
+plot_roc_ternary(predictions3_fixed, Y_test_augment_fixed)
+plt.savefig("RocModelPreFix79.png")
+plt.show()
 
 ### Testing out sampling functions
 
