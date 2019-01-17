@@ -1,0 +1,8 @@
+#!/bin/bash
+source /home/dc_group08/miniconda3/etc/profile.d/conda.sh
+conda activate dc_env
+
+python "/mnt/server-home/dc_group08/testOnWhole.py" 
+
+conda deactivate
+exit 0

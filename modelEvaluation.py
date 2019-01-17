@@ -27,7 +27,6 @@ os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/")
 labels = pd.read_csv("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/csv_files/augmented_labels.csv")
 os.getcwd()
 os.chdir("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/npz_files/")
-
 ### Looking at medium npz rich
 
 input_dir = "/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/seeImages"
@@ -89,17 +88,6 @@ eval_model_no_augment
 predictions3_no_augment= model3NoAug.predict(X_test_no_augment)
 
 
-
-"""
-model5 = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/retinopathy.hdf5')
-#model.evaluate(X_test, Y_test)
-
-
-predictions5 = model5.predict(X_test)
-#predictions3 = model3.predict(X_test)
-model5.predict(X_test[:1])
-"""
-
 ### Generating confusion matrix
 
 def plot_confusion_matrix(cm, classes,
@@ -137,21 +125,6 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
 
 
-"""
-#Compute confusion matrix for 5 labels
-predictions.argmax(axis = 1)
-cnf_matrix = confusion_matrix(Y_test.argmax(axis = 1), predictions.argmax(axis = 1))
-np.set_printoptions(precision=2)
-class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
-
-# Plot normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
-                      title='Normalized confusion matrix')
-plt.show()
-"""
-
-
 ### Model evaluation part
 def createBinaryY(one_hot_labels):
     lst = [1 if i[0] == 0 else 0 for i in one_hot_labels]
@@ -167,9 +140,6 @@ def get_binary_probabilities(preds):
     [probabs.append( [ i[0], (i[1]+i[2])]) for i in preds]
     return np.array(probabs)
 
-
-binary_probabs = get_binary_probabilities(predictions3_no_augment)
-binary_probabs[:3]
 
 def get_ternary_probabilities(preds):
     probabs = []
@@ -301,13 +271,13 @@ Y_test_augment_fixed = data_test_augment_fixed["Y_test"].astype(np.float32)
 
 model3_aug_fixed = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/Models/maren_augment_indep_fixed_79.hdf5')
 eval_model_augment_fixed= model3_aug_fixed.evaluate(X_test_augment_fixed, Y_test_augment_fixed)
-eval_model_augment
+eval_model_augment_fixed
 predictions3_fixed = model3_aug_fixed.predict(X_test_augment_fixed)
 
 # Confusion Matrix
-class_names = ["Healthy", "Not so healthy", "Sick", "Super Sick", "Death"]
+class_names = ["Healthy", "Moderately sick", "Severely sick"]
 cnf_matrix = confusion_matrix(Y_test_augment_fixed.argmax(axis = 1), predictions3_fixed.argmax(axis = 1))
-plot_confusion_matrix(cnf_matrix, classes=class_names[:3], normalize=False,
+plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=False,
                       title='Normalized confusion matrix')
 plt.savefig("fixed_cnf_79.png")
 plt.show()
@@ -315,7 +285,7 @@ plt.show()
 #Evaluation measures
 
 true_binary_Y = get_binary_predictions(Y_test_augment_fixed,0.5)
-pred_binary_Y = get_binary_predictions(predictions3_fixed,0.61)
+pred_binary_Y = get_binary_predictions(predictions3_fixed,0.2)
 get_accuracy(pred_binary_Y, true_binary_Y)
 #get_best_accuracy(Y_test_augment_fixed, predictions3_fixed)
 get_sensitivity(pred_binary_Y, true_binary_Y)
@@ -327,6 +297,15 @@ plot_roc_ternary(predictions3_fixed, Y_test_augment_fixed)
 plt.savefig("RocModelPreFix79.png")
 plt.show()
 
+
+## Eval on test set from "test images"
+data_test_augment_fixed_new = np.load("/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/npz_files/testDataMediumTrenaryAugmentIndep_fixed_new.npz")
+X_test_augment_fixed_new = data_test_augment_fixed_new["X_test"].astype(np.float32)
+Y_test_augment_fixed_new = data_test_augment_fixed_new["Y_test"].astype(np.float32)
+
+#model3_aug_fixed = load_model('/Users/blazejmanczak/Desktop/School/Year2/Q2/DataChallange1/Models/maren_augment_indep_fixed_79.hdf5')
+eval_model_augment_fixed_new = model3_aug_fixed.evaluate(X_test_augment_fixed_new, Y_test_augment_fixed_new)
+eval_model_augment_fixed_new
 ### Testing out sampling functions
 
 def take_random_sample(size, X, Y,seed):
